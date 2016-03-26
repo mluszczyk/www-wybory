@@ -9,6 +9,11 @@ body {
 
 a {
     color: #505050;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .container {
@@ -112,7 +117,6 @@ a {
     text-align: right;
 }
 
-
 thead td {
     border-left: solid 1px #868580;
     font-size: 10px;
@@ -129,6 +133,19 @@ thead td {
 
 .summary > .description {
     text-align: center;
+}
+
+
+.menu a,
+.menu a:visited,
+.menu a:active {
+    color: #FFFFFF;
+
+}
+
+.menu a:hover {
+    color: #b60000;
+    text-decoration: none;
 }
 
 /* Reviewed above */
@@ -311,57 +328,6 @@ thead td {
     font-weight: bold;
     /*white-space: nowrap;*/
     width: 50%;
-}
-
-.link1:link {
-    text-decoration: none;
-}
-
-.link1:visited {
-    text-decoration: none;
-}
-
-.link1:active {
-    text-decoration: none;
-}
-
-.link1:hover {
-    text-decoration: underline;
-}
-
-.link4:link {
-    text-decoration: none;
-}
-
-.link4:visited {
-    text-decoration: none;
-}
-
-.link4:active {
-    text-decoration: none;
-}
-
-.link4:hover {
-    text-decoration: underline;
-}
-
-.link3:link {
-    text-decoration: none;
-}
-
-.link3:visited {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.link3:active {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.link3:hover {
-    color: #b60000;
-    text-decoration: none;
 }
 
 .tabbb {
