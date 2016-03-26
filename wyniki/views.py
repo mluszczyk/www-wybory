@@ -10,11 +10,15 @@ from wyniki import models
 class ResultsView(TemplateView):
     template_name = "wyniki/results.html"
 
+    def get_candidates(self):
+        return models.Kandydat.objects.all()
+
     def get_context_data(self, **kwargs):
         data = self.get_general_statistics()
         data['voivodeship_statistics'] = self.get_voivodeship_statistics()
         data['commune_type_statistics'] = self.get_commune_type_statistics()
         data['commune_size_statistics'] = self.get_commune_size_statistics()
+        data['candidates'] = self.get_candidates()
 
         return data
 

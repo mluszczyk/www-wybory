@@ -67,6 +67,72 @@ a {
  margin: 15px;
 }
 
+.scoreboard {
+  background-color: #e7e7de;
+}
+
+.header {
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.references {
+  background-color: #dbdcde;
+}
+
+.references-header {
+  font-weight: bold;
+}
+
+.col9 {
+  width: 9px;
+}
+
+.col12 {
+  width: 12px;
+}
+
+.col25 {
+  width: 25px;
+}
+
+.col46 {
+  width: 46px;
+}
+
+.col65 {
+  width: 65px;
+}
+
+.col70 {
+  width: 70px;
+}
+
+.col90 {
+  width: 90px;
+}
+
+.col120 {
+  width: 120px;
+}
+
+.col160 {
+  width: 160px;
+}
+
+.col180 {
+  width: 180px;
+}
+
+.col320 {
+  width: 320px;
+}
+
+.number {
+  text-align: right;
+}
+
 /* Reviewed above */
 
 .bg40w989h31 {
@@ -204,7 +270,8 @@ html {
 .hborderltbch,
 .hborderltbr,
 .hborderltbr_l,
-.hborderltbrch {
+.hborderltbrch,
+thead td {
   border-left: solid 1px #868580;
   font-size: 10px;
   font-weight: bold;
@@ -458,24 +525,6 @@ tr.summary > td:last-child {
   margin: 3px 0px 0px 2px;
 }
 
-.tabtxth,
-.tabtxtl {
-  padding: 4px 10px 1px 10px;
-  height: 18px;
-  text-align: left;
-  background-color: #dbdcde;
-  width: 350px;
-}
-
-.tabtxth {
-  font-weight: bold;
-}
-
-.tabtxtl {
-  padding-left: 25px;
-  width: 335px;
-}
-
 .link1:link {
   text-decoration: none;
 }
@@ -568,65 +617,6 @@ tr.summary > td:last-child {
   border-bottom: solid 1px #d3d2cd;
 }
 
-.hroww9,
-.hroww12,
-.hroww25,
-.hroww46,
-.hroww65,
-.hroww70,
-.hroww90,
-.hroww120,
-.hroww160,
-.hroww180,
-.hroww320 {
-  background-color: #e7e7de;
-  height: 1px;
-}
-
-.hroww9 {
-  width: 9px;
-}
-
-.hroww12 {
-  width: 12px;
-}
-
-.hroww25 {
-  width: 25px;
-}
-
-.hroww46 {
-  width: 46px;
-}
-
-.hroww65 {
-  width: 65px;
-}
-
-.hroww70 {
-  width: 70px;
-}
-
-.hroww90 {
-  width: 90px;
-}
-
-.hroww120 {
-  width: 120px;
-}
-
-.hroww160 {
-  width: 160px;
-}
-
-.hroww180 {
-  width: 180px;
-}
-
-.hroww320 {
-  width: 320px;
-}
-
 .topimages,
 .topimages989 {
   height: 41px;
@@ -714,6 +704,7 @@ tr.summary > td:last-child {
   margin: 2px;
   background-position: 1px 0px;
   background-repeat: no-repeat;
+  background-image:url(http://www.prezydent2005.pkw.gov.pl/PZT/mapy/WYN/W/0.png);
 }
 
 .himg {

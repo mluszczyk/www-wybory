@@ -1,16 +1,17 @@
+
 <tr {% if cls %}class="{{ cls }}"{% endif %}>
-    <td class="description col5ar" colspan="3">{{ numer }}</td>
-    <td class="description col5">{{ nazwa }}</td>
-    <td class="number col5ar">{{ liczba_waznych_glosow }}</td>
-    <td class="number col5ar">{{ liczba_a }}</td>
-    <td class="number col5ar">{{ procent_a }}</td>
-    <td class="col5pb2">
+    <td class="description col46">{{ numer }}</td>
+    <td class="description col180">{{ nazwa }}</td>
+    <td class="number col90">{{ liczba_waznych_glosow }}</td>
+    <td class="number col90">{{ liczba_a }}</td>
+    <td class="number col65">{{ procent_a }}</td>
+    <td class="col320">
         <div class="pb2"><img alt=""
                               src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/empty.png"
                               width="{{ procent_a }}%" class="bark1"></div>
         <img alt=""
              src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/empty.png"
              width="100%" class="bark2"></td>
-    <td class="number col5ar">{{ procent_b }}</td>
-    <td colspan="3" class="number col6ar">{{ liczba_b }}</td>
+    <td class="number col65">{{ procent_b }}</td>
+    <td class="number col90">{{ liczba_b }}</td>
 </tr>
