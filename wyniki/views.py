@@ -19,6 +19,8 @@ class ResultsView(TemplateView):
         data['commune_type_statistics'] = self.get_commune_type_statistics()
         data['commune_size_statistics'] = self.get_commune_size_statistics()
         data['candidates'] = self.get_candidates()
+        data['candidates_data'] = ({'model': model, 'summary': summary}
+                                   for model, summary in zip(data['candidates'], data['candidates_summary']))
 
         return data
 
@@ -72,8 +74,8 @@ class ResultsView(TemplateView):
         if row['liczba_glosow_kandydat_a'] + row['liczba_glosow_kandydat_b'] > 0:
             yield row
 
-    @staticmethod
-    def get_general_statistics():
+    @classmethod
+    def get_general_statistics(cls):
         aggregates = [
             'liczba_mieszkancow', 'liczba_uprawnionych',
             'liczba_wydanych_kart', 'liczba_glosow_oddanych',
@@ -86,13 +88,22 @@ class ResultsView(TemplateView):
         data['powierzchnia'] = 312685
         data['zaludnienie'] = data['liczba_mieszkancow'] / data['powierzchnia']
         data['liczba_glosow_waznych'] = data['liczba_glosow_kandydat_a'] + data['liczba_glosow_kandydat_b']
-        for letter in ['a', 'b']:
-            percent = ResultsView.format_percent(
-                data['liczba_glosow_kandydat_{}'.format(letter)], data['liczba_glosow_waznych'])
-            data['procent_kandydat_{}'.format(letter)] = percent
+        data['candidates_summary'] = []
+        for num, letter in enumerate(['a', 'b']):
+            vote_count = data['liczba_glosow_kandydat_{}'.format(letter)]
+            fraction = vote_count / data['liczba_glosow_waznych']
+            data['candidates_summary'].append({
+                'count': vote_count,
+                'fraction': cls.format_fraction(fraction),
+                'percent': cls.format_percent(fraction),
+            })
         return data
 
     @staticmethod
-    def format_percent(a, b):
-        percent = "{0:.2f}".format(100 * a / b)
+    def format_percent(fraction):
+        percent = "{0:.2f}".format(100 * fraction)
         return percent
+
+    @staticmethod
+    def format_fraction(fraction):
+        return "{0:.4f}".format(fraction)

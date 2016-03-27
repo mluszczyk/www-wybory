@@ -88,41 +88,28 @@
         </div>
 
         <table class="main-element scoreboard header">
-            <tr>
-                <td colspan="3">
-                    <a href="#">{{ candidates.0.nazwa }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="mapbar">
-                        <img alt="" src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/empty.png"
-                             width="{{ procent_kandydat_a }}%" class="bark1">
-                    </div>
-                </td>
-                <td>
-                    {{ procent_kandydat_a }}%
-                </td>
-                <td>
-                    {{ liczba_glosow_kandydat_a }}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3"><a href="#">{{ candidates.1.nazwa }}</a></td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="mapbar">
-                        <img alt="" src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/empty.png"
-                             width="{{ procent_kandydat_b }}%" class="bark2"></div>
-                </td>
-                <td>
-                    {{ procent_kandydat_b }}%
-                </td>
-                <td>
-                    {{ liczba_glosow_kandydat_b }}
-                </td>
-            </tr>
+            {% for candidate in candidates_data %}
+                {% with 0 as counter %}
+                <tr>
+                    <td colspan="3">
+                        <a href="#">{{ candidate.model.nazwa }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="meter {% if forloop.counter == 1 %}primary-empty{% else %}secondary-empty{% endif %}">
+                            <span style="width: {{ candidate.summary.percent }}%"></span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ candidate.summary.percent }}%
+                    </td>
+                    <td>
+                        {{ candidate.summary.count }}
+                    </td>
+                </tr>
+                {%  endwith %}
+            {% endfor %}
         </table>
 
     </div>

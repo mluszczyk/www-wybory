@@ -213,61 +213,32 @@ table {
     padding: 8px 15px;
 }
 
-/* Reviewed above */
-
-
-.mapbar {
-    float: left;
-    width: 157px;
-    height: 15px;
-    text-align: left;
-    margin: 0px;
-    padding: 2px 2px 2px 4px;
-}
-
-.bark1,
-.bark2 {
-    height: 13px;
-    margin: 1px 0px 0px 0px;
-}
-
-.tabhdr,
-.tabhdr_22 {
-    background-color: #e7e7de;
+.meter {
+    background-color: white;
+    width: 300px;
     height: 10px;
-    text-align: left;
 }
 
-.bark1 {
+.meter span {
+    background-color: black;
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.meter.primary-empty span {
     background-color: #0260d4;
-    color: #0260d4;
 }
 
-.bark2 {
-    background-color: #FFB300;
-    color: #FFB300;
-}
-
-.bark2 {
+.meter.secondary-empty span {
     background-color: #ff8609;
-    color: #ff8609;
 }
 
-.pb2 {
-    position: absolute;
-    height: 13px;
-    width: 320px;
+.meter.primary-secondary span {
+    background-color: #0260d4;
 }
 
-.mapbar .bark1,
-.mapbar .bark2 {
-    vertical-align: top;
+.meter.primary-secondary {
+    background-color: #ff8609;
 }
-
-.bark1,
-.bark2 {
-    height: 13px;
-    margin: 0px 0px 0px 0px;
-    vertical-align: middle;
-}
-
