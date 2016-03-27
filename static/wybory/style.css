@@ -1,9 +1,15 @@
+/*** uncss> filename: http://127.0.0.1:8022/static/wybory/style.css ***/
+
+* {
+        box-sizing: border-box;
+}
+
 body {
     background-color: #F1EEE5;
     margin: 0;
     padding: 0;
     font-family: Tahoma, Verdana, Helvetica, sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     color: #505050;
 }
 
@@ -18,6 +24,11 @@ a:hover {
 
 .container {
     width: 989px;
+}
+
+.content {
+    padding: 10px;
+
 }
 
 .dark-bg {
@@ -35,13 +46,47 @@ a:hover {
 .menu {
     font-weight: bold;
     height: 29px;
-    text-indent: 10px;
     text-align: left;
     background-color: rgb(138, 151, 172);
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .menu * {
     color: white;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    display: inline-block;;
+    height: 29px;
+    vertical-align: middle;
+    padding-left: 4px;
+    padding-top: 5px;
+}
+
+.menu li:not(.with-img) + li:before{
+    content: " ● ";
+    font-size: 10px;
+    display: inline-block;
+    height: 29px;
+    padding-right: 6px;
+    color: #dbdcde;
+}
+
+.menu a,
+.menu a:visited,
+.menu a:active {
+    color: #FFFFFF;
+}
+
+.menu a:hover {
+    color: #b60000;
+    text-decoration: none;
 }
 
 .clear {
@@ -53,7 +98,7 @@ a:hover {
     font-weight: bold;
     color: #ffffff;
     background-color: #a90414;
-    padding: 8px 20px 8px 20px;
+    padding: 8px 15px 8px 15px;
     display: inline-block;
 }
 
@@ -63,20 +108,25 @@ a:hover {
 
 .left-pane {
     float: left;
-    width: 565px;
+    width: 50%;
+    padding-right: 7px;
 }
 
 .right-pane {
     float: left;
-    width: 360px;
+    width: 50%;
+    padding-left: 7px;
 }
 
 .main-element {
-    margin: 15px;
+    padding: 5px;
+    background-color: #e7e7de;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
-.scoreboard {
-    background-color: #e7e7de;
+.helper-element {
+    padding: 5px;
 }
 
 .header {
@@ -118,8 +168,6 @@ a:hover {
 }
 
 thead td {
-    border-left: solid 1px #868580;
-    font-size: 10px;
     font-weight: bold;
     text-align: center;
     height: 18px;
@@ -135,33 +183,43 @@ thead td {
     text-align: center;
 }
 
-
-.menu a,
-.menu a:visited,
-.menu a:active {
-    color: #FFFFFF;
-
+table {
+    width: 100%;
 }
 
-.menu a:hover {
-    color: #b60000;
-    text-decoration: none;
+.tworows td {
+    width: 50%;
+}
+
+.summary-emphasis {
+    font-weight: bold;
+}
+
+.copyright,
+.copyrightar {
+    text-align: left;
+    vertical-align: top;
+    width: 500px;
+    float: left;
+}
+
+.copyrightar {
+    text-align: right;
+    width: 80px;
+    float: right;
+}
+
+.footer {
+    padding: 8px 15px;
 }
 
 /* Reviewed above */
 
-.msep {
-    width: 1px;
-    height: 29px;
-    margin: 0px 5px 0px 5px;
-    vertical-align: middle;
-}
 
 .mapbar {
     float: left;
     width: 157px;
     height: 15px;
-    border: solid 1px #bdbdb5;
     text-align: left;
     margin: 0px;
     padding: 2px 2px 2px 4px;
@@ -173,193 +231,11 @@ thead td {
     margin: 1px 0px 0px 0px;
 }
 
-
-.copyright,
-.copyrightar {
-    font-size: 10px;
-    font-weight: normal;
-    text-align: left;
-    vertical-align: top;
-    width: 500px;
-    float: left;
-    padding-left: 10px;
-}
-
-.copyrightar {
-    text-align: right;
-    position: relative;
-    width: 80px;
-    float: right;
-}
-
 .tabhdr,
 .tabhdr_22 {
-    border-top: solid 1px #d3d2cd;
     background-color: #e7e7de;
     height: 10px;
     text-align: left;
-}
-
-.tabhdr_22 {
-    height: 22px;
-}
-
-.coltxtltb,
-.coltxtltrb {
-    border-left: solid 1px #d3d2cd;
-    border-top: solid 1px #d3d2cd;
-    border-bottom: solid 1px #d3d2cd;
-    font-weight: normal;
-    font-size: 10px;
-    width: 47px;
-    height: 17px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.coltxtltrb {
-    border-right: solid 1px #d3d2cd;
-}
-
-.zo0_1,
-.zo1_1,
-.zo2_1,
-.zo3_1,
-.zo4_1,
-.zo5_1,
-.zo6_1,
-.zo7_1,
-.zo8_1,
-.zo9_1,
-.zo10_1,
-.n0_1,
-.n1_1,
-.n2_1,
-.n3_1,
-.n4_1,
-.n5_1,
-.n6_1,
-.n7_1,
-.n8_1,
-.n9_1,
-.n10_1,
-.pxx {
-    border-left: solid 1px #d3d2cd;
-    width: 47px;
-    height: 20px;
-}
-
-.zo0_1,
-.zo1_1,
-.zo2_1,
-.zo3_1,
-.zo4_1,
-.zo5_1,
-.zo6_1,
-.zo7_1,
-.zo8_1,
-.zo9_1,
-.zo10_1,
-.n0_1,
-.n1_1,
-.n2_1,
-.n3_1,
-.n4_1,
-.n5_1,
-.n6_1,
-.n7_1,
-.n8_1,
-.n9_1,
-.n10_1,
-.pxx {
-    height: 15px;
-}
-
-.zo10_1,
-.n10_1 {
-    border-right: solid 1px #d3d2cd;
-}
-
-.maplt,
-.mapltr {
-    border-left: solid 1px #d3d2cd;
-    border-top: solid 1px #d3d2cd;
-    background-color: #ffffff;
-    text-align: left;
-    vertical-align: top;
-    padding: 0px;
-    margin: 0px;
-}
-
-.mapltr {
-    border-right: solid 1px #d3d2cd;
-    background-color: #e7e7de;
-}
-
-.righthdr {
-    font-size: 17px;
-    font-weight: bold;
-    background-color: #f9f8f3;
-    text-align: center;
-    vertical-align: middle;
-    padding: 1px 1px 1px 1px;
-    margin: 1px 1px 1px 1px;
-    height: 49px;
-}
-
-.rightlight,
-.rightlight_b,
-.rightdark {
-    border-top: solid 1px #fbf8f3;
-    background-color: #e7e7de;
-    height: 19px;
-    padding: 1px 2px 1px 5px;
-    margin: 1px 2px 1px 5px;
-    text-align: left;
-}
-
-.rightdark {
-    font-weight: bold;
-    background-color: #dedcd0;
-    height: 28px;
-}
-
-.rightlight_b {
-    font-weight: bold;
-    /*white-space: nowrap;*/
-    width: 50%;
-}
-
-.tabbb {
-    border-bottom: solid 1px #d3d2cd;
-}
-
-.topimg {
-    width: 905px;
-    height: 41px;
-    border: solid 0px black;
-}
-
-.mainimg {
-    width: 989px;
-    height: 89px;
-    border: solid 0px black;
-}
-
-.mapimg {
-    width: 320px;
-    height: 278px;
-    border: solid 0px white;
-    padding: 0px;
-    margin: 2px;
-    background-position: 1px 0px;
-    background-repeat: no-repeat;
-    background-image: url(http://www.prezydent2005.pkw.gov.pl/PZT/mapy/WYN/W/0.png);
-}
-
-.himg {
-    width: 46px;
-    height: 9px;
 }
 
 .bark1 {
@@ -367,125 +243,14 @@ thead td {
     color: #0260d4;
 }
 
-.pxx {
-    background-color: #BEFFA7;
-    color: #BEFFA7;
-}
-
 .bark2 {
     background-color: #FFB300;
     color: #FFB300;
 }
 
-.zo0_1 {
-    background-color: #FFFFFF;
-    color: #FFFFFF;
-}
-
-.zo1_1 {
-    background-color: #ffdb70;
-    color: #ffdb70;
-}
-
-.zo2_1 {
-    background-color: #ffcd70;
-    color: #ffcd70;
-}
-
-.zo3_1 {
-    background-color: #ffc15e;
-    color: #ffc15e;
-}
-
-.zo4_1 {
-    background-color: #ffb554;
-    color: #ffb554;
-}
-
-.zo5_1 {
-    background-color: #ffa951;
-    color: #ffa951;
-}
-
-.zo6_1 {
-    background-color: #ff9d39;
-    color: #ff9d39;
-}
-
-.zo7_1 {
-    background-color: #fe9020;
-    color: #fe9020;
-}
-
-.zo8_1,
 .bark2 {
     background-color: #ff8609;
     color: #ff8609;
-}
-
-.zo9_1 {
-    background-color: #e77900;
-    color: #e77900;
-}
-
-.zo10_1 {
-    background-color: #ce6800;
-    color: #ce6800;
-}
-
-.n0_1 {
-    background-color: #FFFFFF;
-    color: #FFFFFF;
-}
-
-.n1_1 {
-    background-color: #cce3ff;
-    color: #cce3ff;
-}
-
-.n2_1 {
-    background-color: #b4d5fd;
-    color: #b4d5fd;
-}
-
-.n3_1 {
-    background-color: #99c7ff;
-    color: #99c7ff;
-}
-
-.n4_1 {
-    background-color: #7db7fe;
-    color: #7db7fe;
-}
-
-.n5_1 {
-    background-color: #5aa4fe;
-    color: #5aa4fe;
-}
-
-.n6_1 {
-    background-color: #3590ff;
-    color: #3590ff;
-}
-
-.n7_1 {
-    background-color: #0273fd;
-    color: #0273fd;
-}
-
-.n8_1 {
-    background-color: #0260d4;
-    color: #0260d4;
-}
-
-.n9_1 {
-    background-color: #014aa3;
-    color: #014aa3;
-}
-
-.n10_1 {
-    background-color: #003575;
-    color: #003575;
 }
 
 .pb2 {
@@ -496,8 +261,6 @@ thead td {
 
 .mapbar .bark1,
 .mapbar .bark2 {
-    height: 13px;
-    margin: 1px 0px 0px 0px;
     vertical-align: top;
 }
 

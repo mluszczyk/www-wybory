@@ -30,57 +30,61 @@
 </div>
 
 <div class="container main">
-    <div class="left-pane summary main-element">
-        <p class="summary-header">Polska</p>
-        <p class="summary-emphasis">Statystyka, stan na 30.06.2005</p>
-        <table>
-            <tr>
-                <td>Liczba mieszkańców:</td>
-                <td>{{ liczba_mieszkancow }}</td>
-            </tr>
-            <tr>
-                <td>Powierzchnia:</td>
-                <td>{{ powierzchnia }} km2</td>
-            </tr>
-            <tr>
-                <td>Zaludnienie:</td>
-                <td>{{ zaludnienie|floatformat }} os/km2</td>
-            </tr>
-        </table>
-        <p class="summary-emphasis">Zbiorcze wyniki głosowania</p>
-        <table>
-            <tr>
-                <td>Liczba uprawnionych:</td>
-                <td>{{ liczba_uprawnionych }}</td>
-            </tr>
-            <tr>
-                <td>Liczba wydanych kart:</td>
-                <td>{{ liczba_wydanych_kart }}</td>
-            </tr>
-            <tr>
-                <td>Liczba głosów oddanych:</td>
-                <td>{{ liczba_glosow_oddanych }}</td>
-            </tr>
-            <tr>
-                <td>Liczba głosów ważnych:</td>
-                <td>{{ liczba_glosow_waznych }}</td>
-            </tr>
-        </table>
+<div class="content">
+    <div class="left-pane">
+        <div class="summary main-element">
+            <p class="header">Polska</p>
+            <p class="summary-emphasis">Statystyka, stan na 30.06.2005</p>
+            <table class="tworows">
+                <tr>
+                    <td>Liczba mieszkańców:</td>
+                    <td>{{ liczba_mieszkancow }}</td>
+                </tr>
+                <tr>
+                    <td>Powierzchnia:</td>
+                    <td>{{ powierzchnia }} km2</td>
+                </tr>
+                <tr>
+                    <td>Zaludnienie:</td>
+                    <td>{{ zaludnienie|floatformat }} os/km2</td>
+                </tr>
+            </table>
+            <p class="summary-emphasis">Zbiorcze wyniki głosowania</p>
+            <table class="tworows">
+                <tr>
+                    <td>Liczba uprawnionych:</td>
+                    <td>{{ liczba_uprawnionych }}</td>
+                </tr>
+                <tr>
+                    <td>Liczba wydanych kart:</td>
+                    <td>{{ liczba_wydanych_kart }}</td>
+                </tr>
+                <tr>
+                    <td>Liczba głosów oddanych:</td>
+                    <td>{{ liczba_glosow_oddanych }}</td>
+                </tr>
+                <tr>
+                    <td>Liczba głosów ważnych:</td>
+                    <td>{{ liczba_glosow_waznych }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div class="right-pane">
         <div class="main-element references">
-            <div class="references-header">Zobacz także:</div>
-            <div><a href="#">Frekwencja</a></div>
-            <div><a href="#">Wyniki głosowania zagranicą</a>
-            </div>
-            <div class="tabtxtl">
-                <a href="#">Porównanie wyników głosowania na kandydatów w zależności od siedziby komisji
-                    obwodowej</a>
-            </div>
-            <div class="references-header">Szczegółowe wyniki głosowania na kandydatów:</div>
-            <div><a href="#">{{ candidates.0.nazwa }}</a></div>
-            <div><a href="#">{{ candidates.1.nazwa }}</a>
-            </div>
+            <p class="references-header">Zobacz także:</p>
+            <ul>
+                <li><a href="#">Frekwencja</a></li>
+                <li><a href="#">Wyniki głosowania zagranicą</a></li>
+                <li><a href="#">
+                    Porównanie wyników głosowania na kandydatów w zależności od siedziby komisji obwodowej
+                </a></li>
+            </ul>
+            <p class="references-header">Szczegółowe wyniki głosowania na kandydatów:</p>
+            <ul>
+                <li><a href="#">{{ candidates.0.nazwa }}</a></li>
+                <li><a href="#">{{ candidates.1.nazwa }}</a></li>
+            </ul>
         </div>
 
         <table class="main-element scoreboard header">
@@ -164,8 +168,10 @@
 
     <table class="tabbb main-element">
         <tr>
-            <td colspan="14" class="tabhdr"><a name="miasto">Porównanie wyników
-                głosowania na kandydatów w zależności od siedziby komisji obwodowej</a></td>
+            <td colspan="14" class="tabhdr">
+                Porównanie wyników
+                głosowania na kandydatów w zależności od siedziby komisji obwodowej
+            </td>
         </tr>
 
         <thead>
@@ -203,14 +209,18 @@
         {% endfor %}
     </table>
 </div>
+</div>
 <div class="container medium-dark-bg menu">
     {% include "wyniki/menu.html" %}
 </div>
 <div class="footer container">
-    <div class="copyright">Copyright [c] 2005 <b><a href="#" target="_blank">Mikrobit Sp. z o.o.</a></b>. Wszystkie Prawa Zastrzeżone.</div>
-    <div class="copyrightar">&nbsp;<a href="#">do góry&nbsp;
-        <img alt="" src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/toppage.png" align="middle"></a>&nbsp;
+    <div class="copyright">Copyright [c] 2005 <b><a href="#" target="_blank">Mikrobit Sp. z o.o.</a></b>. Wszystkie
+        Prawa Zastrzeżone.
     </div>
+    <div class="copyrightar">&nbsp;<a href="#">do góry&nbsp;
+        <img alt="" src="http://www.prezydent2005.pkw.gov.pl/PZT/PL/WYN/W/../../../img/toppage.png"></a>&nbsp;
+    </div>
+    <div class="clear"></div>
 </div>
 
 <map name="Map">
