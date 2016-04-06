@@ -27,17 +27,23 @@ class ResultsView(TemplateView):
     @classmethod
     def get_commune_size_statistics(cls):
         limits = [5000, 10000, 20000, 50000, 100000, 200000, 500000]
+        special_types = [models.Gmina.RODZAJ_STATKI, models.Gmina.RODZAJ_ZAGRANICA]
         iterables = [
             cls.get_aggregates_for_queryset('Statki i zagranica', models.Gmina.objects.filter(
-                rodzaj__in=[models.Gmina.RODZAJ_STATKI, models.Gmina.RODZAJ_ZAGRANICA])),
-            cls.get_aggregates_for_queryset("do {}", models.Gmina.objects.filter(liczba_mieszkancow__lte=limits[0]))
+                rodzaj__in=special_types)),
+            cls.get_aggregates_for_queryset(
+                "do {}".format(limits[0]),
+                models.Gmina.objects.filter(liczba_mieszkancow__lte=limits[0]
+                                            ).exclude(rodzaj__in=special_types))
         ]
 
         for lower_limit, upper_limit in zip(limits[:-1], limits[1:]):
             iterables.append(
                 cls.get_aggregates_for_queryset(
                     "od {} do {}".format(lower_limit + 1, upper_limit),
-                    models.Gmina.objects.filter(liczba_mieszkancow__gt=lower_limit, liczba_mieszkancow__lte=upper_limit)
+                    models.Gmina.objects.filter(liczba_mieszkancow__gt=lower_limit,
+                                                liczba_mieszkancow__lte=upper_limit
+                                                ).exclude(rodzaj__in=special_types)
                 )
             )
 
