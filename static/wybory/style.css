@@ -1,7 +1,5 @@
-/*** uncss> filename: http://127.0.0.1:8022/static/wybory/style.css ***/
-
 * {
-        box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
@@ -28,7 +26,6 @@ a:hover {
 
 .content {
     padding: 10px;
-
 }
 
 .dark-bg {
@@ -62,14 +59,14 @@ a:hover {
 }
 
 .menu li {
-    display: inline-block;;
+    display: inline-block;
     height: 29px;
     vertical-align: middle;
     padding-left: 4px;
     padding-top: 5px;
 }
 
-.menu li:not(.with-img) + li:before{
+.menu li:not(.with-img) + li:before {
     content: " ● ";
     font-size: 10px;
     display: inline-block;
@@ -123,10 +120,6 @@ a:hover {
     background-color: #e7e7de;
     width: 100%;
     margin-bottom: 15px;
-}
-
-.helper-element {
-    padding: 5px;
 }
 
 .header {
