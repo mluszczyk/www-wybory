@@ -51,7 +51,7 @@ class ResultsView(TemplateView):
     @classmethod
     def get_voivodeship_statistics(cls):
         annotations = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
-        kwargs = {k: Sum('gmina__{}'.format(k)) for k in annotations}
+        kwargs = {k: Coalesce(Sum('gmina__{}'.format(k)), 0) for k in annotations}
         items = models.Wojewodztwo.objects.annotate(**kwargs).order_by('nazwa')
         return items
 

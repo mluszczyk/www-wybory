@@ -16,9 +16,11 @@ def row(numer, nazwa, liczba_a, liczba_b, cls=''):
         'nazwa': nazwa,
         'liczba_a': liczba_a,
         'liczba_b': liczba_b,
-        'procent_a': format_percent(liczba_a, vote_sum),
-        'procent_b': format_percent(liczba_b, vote_sum),
         'liczba_waznych_glosow': vote_sum,
         'cls': cls
     }
+    if vote_sum > 0:
+        context['procent_a'] = format_percent(liczba_a, vote_sum)
+        context['procent_b'] = format_percent(liczba_b, vote_sum)
+
     return context
