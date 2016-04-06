@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -34,6 +35,17 @@ class Gmina(models.Model):
 
     class Meta:
         verbose_name_plural = 'gminy'
+
+    def clean(self):
+        if self.liczba_glosow_kandydat_a + self.liczba_glosow_kandydat_b > self.liczba_glosow_oddanych:
+            raise ValidationError("Łączna liczba głosow na kandydatów nie może przekraczać liczby głosów oddanych")
+        if self.liczba_glosow_oddanych > self.liczba_wydanych_kart:
+            raise ValidationError("Liczba głosów oddanych nie może przekrazać liczby wydanych kart")
+        if self.liczba_wydanych_kart > self.liczba_uprawnionych:
+            raise ValidationError("Liczba wydanych kart nie może przekraczać liczby uprawnionych")
+        if self.liczba_uprawnionych > self.liczba_mieszkancow:
+            raise ValidationError("Liczba uprawnionych nie może przekraczać liczby mieszkańców")
+        super().clean()
 
 
 class Kandydat(models.Model):
