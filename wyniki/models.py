@@ -27,8 +27,6 @@ class Gmina(models.Model):
     liczba_uprawnionych = models.IntegerField()
     liczba_wydanych_kart = models.IntegerField()
     liczba_glosow_oddanych = models.IntegerField()
-    liczba_glosow_kandydat_a = models.IntegerField()
-    liczba_glosow_kandydat_b = models.IntegerField()
 
     def __str__(self):
         return self.nazwa
@@ -37,8 +35,6 @@ class Gmina(models.Model):
         verbose_name_plural = 'gminy'
 
     def clean(self):
-        if self.liczba_glosow_kandydat_a + self.liczba_glosow_kandydat_b > self.liczba_glosow_oddanych:
-            raise ValidationError("Łączna liczba głosow na kandydatów nie może przekraczać liczby głosów oddanych")
         if self.liczba_glosow_oddanych > self.liczba_wydanych_kart:
             raise ValidationError("Liczba głosów oddanych nie może przekrazać liczby wydanych kart")
         if self.liczba_wydanych_kart > self.liczba_uprawnionych:
@@ -46,6 +42,20 @@ class Gmina(models.Model):
         if self.liczba_uprawnionych > self.liczba_mieszkancow:
             raise ValidationError("Liczba uprawnionych nie może przekraczać liczby mieszkańców")
         super().clean()
+
+
+class Wynik(models.Model):
+    """Wynik kandydata w gminie."""
+    kandydat = models.ForeignKey('Kandydat')
+    gmina = models.ForeignKey('Gmina')
+    liczba = models.IntegerField()
+
+    class Meta:
+        unique_together = ('kandydat', 'gmina')
+        verbose_name_plural = 'wyniki'
+
+    def __str__(self):
+        return "Wynik: kandydat {}, gmina {}".format(self.kandydat, self.gmina)
 
 
 class Kandydat(models.Model):

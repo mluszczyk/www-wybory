@@ -28,76 +28,89 @@ class ResultsView(TemplateView):
     def get_commune_size_statistics(cls):
         limits = [5000, 10000, 20000, 50000, 100000, 200000, 500000]
         special_types = [models.Gmina.RODZAJ_STATKI, models.Gmina.RODZAJ_ZAGRANICA]
-        iterables = [
-            cls.get_aggregates_for_queryset('Statki i zagranica', models.Gmina.objects.filter(
-                rodzaj__in=special_types)),
+        rows = [
+            cls.get_aggregates_for_queryset('Statki i zagranica', models.Wynik.objects.filter(
+                gmina__rodzaj__in=special_types)),
             cls.get_aggregates_for_queryset(
                 "do {}".format(limits[0]),
-                models.Gmina.objects.filter(liczba_mieszkancow__lte=limits[0]
-                                            ).exclude(rodzaj__in=special_types))
+                models.Wynik.objects.filter(gmina__liczba_mieszkancow__lte=limits[0]
+                                            ).exclude(gmina__rodzaj__in=special_types))
         ]
 
         for lower_limit, upper_limit in zip(limits[:-1], limits[1:]):
-            iterables.append(
+            rows.append(
                 cls.get_aggregates_for_queryset(
                     "od {} do {}".format(lower_limit + 1, upper_limit),
-                    models.Gmina.objects.filter(liczba_mieszkancow__gt=lower_limit,
-                                                liczba_mieszkancow__lte=upper_limit
-                                                ).exclude(rodzaj__in=special_types)
+                    models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=lower_limit,
+                                                gmina__liczba_mieszkancow__lte=upper_limit
+                                                ).exclude(gmina__rodzaj__in=special_types)
                 )
             )
 
-        iterables.append(
+        rows.append(
             cls.get_aggregates_for_queryset(
                 "pow. {}".format(limits[-1]),
-                models.Gmina.objects.filter(liczba_mieszkancow__gt=limits[-1])))
-        items = chain.from_iterable(iterables)
-        return items
+                models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=limits[-1])))
+        return rows
 
     @classmethod
     def get_voivodeship_statistics(cls):
-        annotations = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
-        kwargs = {k: Coalesce(Sum('gmina__{}'.format(k)), 0) for k in annotations}
-        items = models.Wojewodztwo.objects.annotate(**kwargs).order_by('nazwa')
+        items = []
+        for item in models.Wojewodztwo.objects.all().order_by('nazwa'):
+            for letter, kandydat in zip(['a', 'b'], models.Kandydat.objects.all().order_by('id')):
+                aggregate = kandydat.wynik_set.filter(gmina__wojewodztwo=item).aggregate(
+                    sum=Coalesce(Sum('liczba'), 0))
+                setattr(item, 'liczba_glosow_kandydat_{}'.format(letter), aggregate['sum'])
+            items.append(item)
         return items
 
     @classmethod
     def get_commune_type_statistics(cls):
         items = []
         for commune_type, _ in models.Gmina.RODZAJ_CHOICES:
-            queryset = models.Gmina.objects.filter(rodzaj=commune_type)
-            for row in cls.get_aggregates_for_queryset(commune_type, queryset):
-                items.append(row)
+            queryset = models.Wynik.objects.filter(gmina__rodzaj=commune_type)
+            row = cls.get_aggregates_for_queryset(commune_type, queryset)
+            items.append(row)
         return items
 
     @classmethod
     def get_aggregates_for_queryset(cls, name, queryset):
-        aggregates = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
-        row = queryset.aggregate(**{
-            aggregate: Coalesce(Sum(aggregate), 0) for aggregate in aggregates
-            })
+        row = cls.get_vote_aggregates(queryset)
         row['nazwa'] = name
-        if row['liczba_glosow_kandydat_a'] + row['liczba_glosow_kandydat_b'] > 0:
-            yield row
+        return row
+
+    @classmethod
+    def get_vote_aggregates(cls, queryset):
+        aggregates = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
+        candidates = models.Kandydat.objects.all()
+        row = {}
+        for agg, candidate in zip(aggregates, candidates):
+            queryset_aggregate = queryset.filter(
+                kandydat=candidate
+            ).aggregate(
+                sum=Coalesce(Sum("liczba"), 0)
+            )
+            row[agg] = queryset_aggregate["sum"]
+        return row
 
     @classmethod
     def get_general_statistics(cls):
         aggregates = [
             'liczba_mieszkancow', 'liczba_uprawnionych',
             'liczba_wydanych_kart', 'liczba_glosow_oddanych',
-            'liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b'
         ]
         data = {}
         for aggregate in aggregates:
             result = models.Gmina.objects.aggregate(**{aggregate: Sum(aggregate)})
             data.update(result)
+        data.update(cls.get_vote_aggregates(models.Wynik.objects.all()))
         data['powierzchnia'] = 312685
         data['zaludnienie'] = data['liczba_mieszkancow'] / data['powierzchnia']
         data['liczba_glosow_waznych'] = data['liczba_glosow_kandydat_a'] + data['liczba_glosow_kandydat_b']
         data['candidates_summary'] = []
         for num, letter in enumerate(['a', 'b']):
             vote_count = data['liczba_glosow_kandydat_{}'.format(letter)]
-            fraction = vote_count / data['liczba_glosow_waznych']
+            fraction = vote_count / data['liczba_glosow_waznych'] if data['liczba_glosow_waznych'] else 0
             data['candidates_summary'].append({
                 'count': vote_count,
                 'fraction': cls.format_fraction(fraction),
