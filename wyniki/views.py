@@ -1,5 +1,3 @@
-from itertools import chain
-
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.views.generic import TemplateView

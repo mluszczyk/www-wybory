@@ -42,17 +42,21 @@ class Gmina(models.Model):
         verbose_name_plural = 'gminy'
 
     def clean(self):
-        votes_agg = self.wynik_set.aggregate(sum=Sum("liczba"))
-        votes_sum = votes_agg["sum"]
-        if votes_sum > self.liczba_glosow_oddanych:
-            raise ValidationError(MESSAGE_TOO_MANY_VOTES)
-        if self.liczba_glosow_oddanych > self.liczba_wydanych_kart:
-            raise ValidationError("Liczba głosów oddanych nie może przekrazać liczby wydanych kart")
-        if self.liczba_wydanych_kart > self.liczba_uprawnionych:
-            raise ValidationError("Liczba wydanych kart nie może przekraczać liczby uprawnionych")
-        if self.liczba_uprawnionych > self.liczba_mieszkancow:
-            raise ValidationError("Liczba uprawnionych nie może przekraczać liczby mieszkańców")
         super().clean()
+        votes_agg = self.wynik_set.aggregate(sum=Coalesce(Sum("liczba"), 0))
+        votes_sum = votes_agg["sum"]
+        if self.liczba_glosow_oddanych is not None and votes_sum is not None:
+            if votes_sum > self.liczba_glosow_oddanych:
+                raise ValidationError(MESSAGE_TOO_MANY_VOTES)
+        if self.liczba_glosow_oddanych is not None and self.liczba_wydanych_kart is not None:
+            if self.liczba_glosow_oddanych > self.liczba_wydanych_kart:
+                raise ValidationError("Liczba głosów oddanych nie może przekrazać liczby wydanych kart")
+        if self.liczba_wydanych_kart is not None and self.liczba_uprawnionych is not None:
+            if self.liczba_wydanych_kart > self.liczba_uprawnionych:
+                raise ValidationError("Liczba wydanych kart nie może przekraczać liczby uprawnionych")
+        if self.liczba_uprawnionych is not None and self.liczba_mieszkancow is not None:
+            if self.liczba_uprawnionych > self.liczba_mieszkancow:
+                raise ValidationError("Liczba uprawnionych nie może przekraczać liczby mieszkańców")
 
 
 class Wynik(models.Model):
@@ -72,6 +76,8 @@ class Wynik(models.Model):
         votes_aggr = self.gmina.wynik_set.all().exclude(
             pk=self.pk
         ).aggregate(sum=Coalesce(Sum("liczba"), 0))
+        if self.liczba is None:
+            return
         rest = votes_aggr["sum"]
         if rest + self.liczba > self.gmina.liczba_glosow_oddanych:
             raise ValidationError(MESSAGE_TOO_MANY_VOTES)

@@ -43,3 +43,6 @@ class TestGmina(TestCase):
             gmina=self.gmina, kandydat=self.kandydat, liczba=45500
         )
         self.gmina.clean()
+
+    def test_clean_no_votes(self):
+        self.gmina.clean()
