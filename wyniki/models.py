@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 
 
 class Wojewodztwo(models.Model):
@@ -56,6 +58,16 @@ class Wynik(models.Model):
 
     def __str__(self):
         return "Wynik: kandydat {}, gmina {}".format(self.kandydat, self.gmina)
+
+    def clean(self):
+        votes_aggr = self.gmina.wynik_set.all().exclude(
+            pk=self.pk
+        ).aggregate(sum=Coalesce(Sum("liczba"), 0))
+        rest = votes_aggr["sum"]
+        if rest + self.liczba > self.gmina.liczba_glosow_oddanych:
+            msg = ("Suma głosów na kandydatów w gminie nie może być wyższa niż "
+                   "liczba głosów oddanych")
+            raise ValidationError(msg)
 
 
 class Kandydat(models.Model):
