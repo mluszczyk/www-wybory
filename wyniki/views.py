@@ -83,6 +83,7 @@ class ResultsView(TemplateView):
     def get_vote_aggregates(cls, queryset):
         aggregates = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
         candidates = models.Kandydat.objects.all()
+        assert candidates.count() == 2, "Exactly two candidates are required"
         row = {}
         for agg, candidate in zip(aggregates, candidates):
             queryset_aggregate = queryset.filter(
@@ -101,7 +102,9 @@ class ResultsView(TemplateView):
         ]
         data = {}
         for aggregate in aggregates:
-            result = models.Gmina.objects.aggregate(**{aggregate: Sum(aggregate)})
+            result = models.Gmina.objects.aggregate(
+                **{aggregate: Coalesce(Sum(aggregate), 0)}
+            )
             data.update(result)
         data.update(cls.get_vote_aggregates(models.Wynik.objects.all()))
         data['powierzchnia'] = 312685

@@ -1,0 +1,16 @@
+[
+{
+  "model": "wyniki.kandydat",
+  "pk": 1,
+  "fields": {
+    "nazwa": "Kandydat A"
+  }
+},
+{
+  "model": "wyniki.kandydat",
+  "pk": 2,
+  "fields": {
+    "nazwa": "Kandydat B"
+  }
+}
+]
