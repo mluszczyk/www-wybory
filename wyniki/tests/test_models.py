@@ -5,7 +5,7 @@ from wyniki import models
 from wyniki.tests import factories
 
 
-class TestKandydat(TestCase):
+class TestWynik(TestCase):
     def setUp(self):
         self.gmina = factories.GminaFactory()
         self.kandydat = factories.KandydatFactory()
@@ -25,3 +25,21 @@ class TestKandydat(TestCase):
                 gmina=self.gmina, kandydat=self.kandydat, liczba=6000
             ).clean()
 
+
+class TestGmina(TestCase):
+    def setUp(self):
+        self.gmina = factories.GminaFactory()
+        self.kandydat = factories.KandydatFactory()
+
+    def test_clean_too_few_votes(self):
+        models.Wynik.objects.create(
+            gmina=self.gmina, kandydat=self.kandydat, liczba=1000)
+        self.gmina.liczba_glosow_oddanych = 1
+        with self.assertRaises(ValidationError):
+            self.gmina.clean()
+
+    def test_clean_ok(self):
+        models.Wynik.objects.create(
+            gmina=self.gmina, kandydat=self.kandydat, liczba=45500
+        )
+        self.gmina.clean()

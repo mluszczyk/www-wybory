@@ -3,6 +3,11 @@ from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 
+MESSAGE_TOO_MANY_VOTES = (
+    "Suma głosów na kandydatów w gminie nie może być wyższa niż "
+    "liczba głosów oddanych"
+)
+
 
 class Wojewodztwo(models.Model):
     nazwa = models.CharField(max_length=100, unique=True)
@@ -37,6 +42,10 @@ class Gmina(models.Model):
         verbose_name_plural = 'gminy'
 
     def clean(self):
+        votes_agg = self.wynik_set.aggregate(sum=Sum("liczba"))
+        votes_sum = votes_agg["sum"]
+        if votes_sum > self.liczba_glosow_oddanych:
+            raise ValidationError(MESSAGE_TOO_MANY_VOTES)
         if self.liczba_glosow_oddanych > self.liczba_wydanych_kart:
             raise ValidationError("Liczba głosów oddanych nie może przekrazać liczby wydanych kart")
         if self.liczba_wydanych_kart > self.liczba_uprawnionych:
@@ -65,9 +74,7 @@ class Wynik(models.Model):
         ).aggregate(sum=Coalesce(Sum("liczba"), 0))
         rest = votes_aggr["sum"]
         if rest + self.liczba > self.gmina.liczba_glosow_oddanych:
-            msg = ("Suma głosów na kandydatów w gminie nie może być wyższa niż "
-                   "liczba głosów oddanych")
-            raise ValidationError(msg)
+            raise ValidationError(MESSAGE_TOO_MANY_VOTES)
 
 
 class Kandydat(models.Model):
