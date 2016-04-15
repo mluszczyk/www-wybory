@@ -43,7 +43,7 @@ class Gmina(models.Model):
 
     def clean(self):
         super().clean()
-        votes_agg = self.wynik_set.aggregate(sum=Coalesce(Sum("liczba"), 0))
+        votes_agg = self.wynik_set.select_for_update().aggregate(sum=Coalesce(Sum("liczba"), 0))
         votes_sum = votes_agg["sum"]
         if self.liczba_glosow_oddanych is not None and votes_sum is not None:
             if votes_sum > self.liczba_glosow_oddanych:
@@ -73,13 +73,15 @@ class Wynik(models.Model):
         return "Wynik: kandydat {}, gmina {}".format(self.kandydat, self.gmina)
 
     def clean(self):
+        super().clean()
+        gmina = Gmina.objects.select_for_update().get(pk=self.gmina.pk)
         votes_aggr = self.gmina.wynik_set.all().exclude(
             pk=self.pk
-        ).aggregate(sum=Coalesce(Sum("liczba"), 0))
+        ).select_for_update().aggregate(sum=Coalesce(Sum("liczba"), 0))
         if self.liczba is None:
             return
         rest = votes_aggr["sum"]
-        if rest + self.liczba > self.gmina.liczba_glosow_oddanych:
+        if rest + self.liczba > gmina.liczba_glosow_oddanych:
             raise ValidationError(MESSAGE_TOO_MANY_VOTES)
 
 
