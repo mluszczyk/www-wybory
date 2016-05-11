@@ -9,7 +9,7 @@ def format_percent(a, b):
 
 
 @register.inclusion_tag('wyniki/row.html')
-def row(numer, nazwa, liczba_a, liczba_b, cls=''):
+def row(numer, kategoria, kod, nazwa, liczba_a, liczba_b, cls=''):
     vote_sum = liczba_a + liczba_b
     context = {
         'numer': numer,
@@ -17,7 +17,9 @@ def row(numer, nazwa, liczba_a, liczba_b, cls=''):
         'liczba_a': liczba_a,
         'liczba_b': liczba_b,
         'liczba_waznych_glosow': vote_sum,
-        'cls': cls
+        'cls': cls,
+        'kod': kod,
+        'kategoria': kategoria
     }
     if vote_sum > 0:
         context['procent_a'] = format_percent(liczba_a, vote_sum)

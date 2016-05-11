@@ -145,11 +145,11 @@
         </thead>
         <tbody>
         {% for item in voivodeship_statistics %}
-            {% row forloop.counter item.nazwa|stringformat:"s, woj." item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
+            {% row forloop.counter 'voivodeship' item.kod item.nazwa|stringformat:"s, woj." item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
         {% endfor %}
         </tbody>
         <tbody>
-        {% row "Σ" "Polska" liczba_glosow_kandydat_a liczba_glosow_kandydat_b cls="summary" %}
+        {% row "Σ" None None "Polska" liczba_glosow_kandydat_a liczba_glosow_kandydat_b cls="summary" %}
         </tbody>
     </table>
 
@@ -184,7 +184,7 @@
         </thead>
 
         {% for item in commune_type_statistics %}
-            {% row forloop.counter item.nazwa|title item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
+            {% row forloop.counter 'commune_type' item.kod item.nazwa|title item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
         {% endfor %}
         <tr>
             <td colspan="14" class="tabhdr_22">Porównanie wyników głosowania na kandydatów w
@@ -192,7 +192,7 @@
             </td>
         </tr>
         {% for item in commune_size_statistics %}
-            {% row forloop.counter item.nazwa item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
+            {% row forloop.counter 'commune_size' item.kod item.nazwa item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
         {% endfor %}
     </table>
 </div>

@@ -1,6 +1,14 @@
 <tr {% if cls %}class="{{ cls }}"{% endif %}>
     <td class="number col46">{{ numer }}</td>
-    <td class="description col180">{{ nazwa }}</td>
+    <td class="description col180">
+        {% if kod != None  %}
+            <span class="row-link" data-category="{{ kategoria }}" data-code="{{ kod }}"> </span>
+        {%  endif %}
+        {{ nazwa }}
+        {% if kod != None %}
+            </span>
+        {% endif %}
+    </td>
     <td class="number col90">{{ liczba_waznych_glosow }}</td>
     <td class="number col90">{{ liczba_a }}</td>
     <td class="number col65">{{ procent_a|default:'-' }}</td>

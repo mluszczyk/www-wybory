@@ -1,7 +1,60 @@
+import abc
+import enum
+from collections import namedtuple
+
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 
 from wyniki import models
+
+
+StatisticRow = namedtuple("StatisticRow", ["code", "name", "queryset"])
+
+
+def get_commune_statistics_list():
+    limits = [5000, 10000, 20000, 50000, 100000, 200000, 500000]
+    special_types = [models.Gmina.RODZAJ_STATKI, models.Gmina.RODZAJ_ZAGRANICA]
+    rows = [
+        StatisticRow("statki-zagranica", 'Statki i zagranica',
+                     models.Wynik.objects.filter(gmina__rodzaj__in=special_types)),
+        StatisticRow("do", "do {}".format(limits[0]),
+                     models.Wynik.objects.filter(gmina__liczba_mieszkancow__lte=limits[0]
+                                                 ).exclude(gmina__rodzaj__in=special_types))
+    ]
+    for lower_limit, upper_limit in zip(limits[:-1], limits[1:]):
+        rows.append(
+            StatisticRow("{}-{}".format(lower_limit, upper_limit),
+                         "od {} do {}".format(lower_limit + 1, upper_limit),
+                         models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=lower_limit,
+                                                     gmina__liczba_mieszkancow__lte=upper_limit
+                                                     ).exclude(gmina__rodzaj__in=special_types))
+        )
+    rows.append(
+        StatisticRow("od", "pow. {}".format(limits[-1]),
+                     models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=limits[-1])))
+    return rows
+
+
+def get_commune_type_statistics_list():
+    items = []
+    for commune_type, _ in models.Gmina.RODZAJ_CHOICES:
+        queryset = models.Wynik.objects.filter(gmina__rodzaj=commune_type)
+        items.append(StatisticRow(commune_type, commune_type, queryset))
+    return items
+
+
+def get_voivodeship_statistics_list():
+    items = []
+    for item in models.Wojewodztwo.objects.all().order_by('nazwa'):
+        queryset = models.Wynik.objects.filter(gmina__wojewodztwo=item)
+        items.append(StatisticRow(item.nazwa, item.nazwa, queryset))
+    return items
+
+STATISTICS = {
+    "commune_size": get_commune_statistics_list,
+    "commune_type": get_commune_type_statistics_list,
+    "voivodeship": get_voivodeship_statistics_list
+}
 
 
 class ElectionStatistics:
@@ -12,51 +65,15 @@ class ElectionStatistics:
     def get_candidates(self):
         return self.candidates
 
-    def get_commune_size_statistics(self):
-        limits = [5000, 10000, 20000, 50000, 100000, 200000, 500000]
-        special_types = [models.Gmina.RODZAJ_STATKI, models.Gmina.RODZAJ_ZAGRANICA]
-        rows = [
-            self.get_aggregates_for_queryset('Statki i zagranica', models.Wynik.objects.filter(
-                gmina__rodzaj__in=special_types)),
-            self.get_aggregates_for_queryset(
-                "do {}".format(limits[0]),
-                models.Wynik.objects.filter(gmina__liczba_mieszkancow__lte=limits[0]
-                                            ).exclude(gmina__rodzaj__in=special_types))
-        ]
+    def get_statistics(self, category):
+        list_func = STATISTICS[category]
+        rows = list_func()
+        return [self.statistic_row_to_items(row) for row in rows]
 
-        for lower_limit, upper_limit in zip(limits[:-1], limits[1:]):
-            rows.append(
-                self.get_aggregates_for_queryset(
-                    "od {} do {}".format(lower_limit + 1, upper_limit),
-                    models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=lower_limit,
-                                                gmina__liczba_mieszkancow__lte=upper_limit
-                                                ).exclude(gmina__rodzaj__in=special_types)
-                )
-            )
-
-        rows.append(
-            self.get_aggregates_for_queryset(
-                "pow. {}".format(limits[-1]),
-                models.Wynik.objects.filter(gmina__liczba_mieszkancow__gt=limits[-1])))
-        return rows
-
-    def get_voivodeship_statistics(self):
-        items = []
-        for item in models.Wojewodztwo.objects.all().order_by('nazwa'):
-            for letter, kandydat in zip(['a', 'b'], self.candidates):
-                aggregate = kandydat.wynik_set.filter(gmina__wojewodztwo=item).aggregate(
-                    sum=Coalesce(Sum('liczba'), 0))
-                setattr(item, 'liczba_glosow_kandydat_{}'.format(letter), aggregate['sum'])
-            items.append(item)
-        return items
-
-    def get_commune_type_statistics(self):
-        items = []
-        for commune_type, _ in models.Gmina.RODZAJ_CHOICES:
-            queryset = models.Wynik.objects.filter(gmina__rodzaj=commune_type)
-            row = self.get_aggregates_for_queryset(commune_type, queryset)
-            items.append(row)
-        return items
+    def statistic_row_to_items(self, row: StatisticRow):
+        row_dict = self.get_aggregates_for_queryset(row.name, row.queryset)
+        row_dict['kod'] = row.code
+        return row_dict
 
     def get_aggregates_for_queryset(self, name, queryset):
         row = self.get_vote_aggregates(queryset)

@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
 from wyniki import models
 from wyniki.election_statistics import ElectionStatistics
@@ -11,9 +11,9 @@ class ResultsView(TemplateView):
         candidates = list(models.Kandydat.objects.all())
         statistics = ElectionStatistics(candidates)
         data = statistics.get_general_statistics()
-        data['voivodeship_statistics'] = statistics.get_voivodeship_statistics()
-        data['commune_type_statistics'] = statistics.get_commune_type_statistics()
-        data['commune_size_statistics'] = statistics.get_commune_size_statistics()
+        data['voivodeship_statistics'] = statistics.get_statistics("voivodeship")
+        data['commune_type_statistics'] = statistics.get_statistics("commune_type")
+        data['commune_size_statistics'] = statistics.get_statistics("commune_size")
         data['candidates'] = statistics.get_candidates()
         data['candidates_data'] = ({'model': model, 'summary': summary}
                                    for model, summary in zip(data['candidates'], data['candidates_summary']))
