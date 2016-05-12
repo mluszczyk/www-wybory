@@ -41,4 +41,7 @@ class ChangeResultsJsonView(View):
             form.save()
             return JsonResponse({'status': 'OK'})
         else:
-            return JsonResponse({'status': 'form_error'})
+            return JsonResponse({
+                'status': 'formError',
+                'formErrors': form.errors
+            })

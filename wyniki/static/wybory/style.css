@@ -263,3 +263,7 @@ table {
     font-size: smaller;
     background: white;
 }
+
+.error-div {
+    font-weight: bold;
+}

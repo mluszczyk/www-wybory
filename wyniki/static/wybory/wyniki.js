@@ -65,6 +65,7 @@ class ResultEditPopup extends Popup {
         communeInput.type = type;
         communeInput.name = name;
         communeInput.value = value;
+        communeInput.required = true;
         return communeInput;
     }
 
@@ -83,6 +84,9 @@ class ResultEditPopup extends Popup {
         let header = Wyniki.createElement("h2", "Modyfikacja wyników");
         let form = document.createElement("form");
 
+        var errorDiv = document.createElement("div");
+        errorDiv.classList.add("error-div");
+        form.appendChild(errorDiv);
         form.appendChild(ResultEditPopup.createInput("commune", "hidden", communePk));
         form.appendChild(ResultEditPopup.createInput("candidate_a", "hidden", 1));
         form.appendChild(ResultEditPopup.createInput("candidate_b", "hidden", 2));
@@ -100,9 +104,18 @@ class ResultEditPopup extends Popup {
     static submit(form) {
         let url = "/change-results/";
         let data = new FormData(form);
+        let errorDiv = form.querySelector(".error-div");
+        errorDiv.innerHTML = '';
+        if (!form.result_a.value || !form.result_b.value) {
+            var errorNode = document.createTextNode("Proszę uzupełnić pola z wynikami.");
+            errorDiv.appendChild(errorNode);
+            return;
+        }
         Wyniki.jsonPromise("POST", url, data).then(function(data) {
             if (data.status === "OK") {
                 console.log("Success!");
+            } else if (data.status == "formError") {
+                console.log(data['formErrors']);
             } else {
                 console.log(data.status);
             }
