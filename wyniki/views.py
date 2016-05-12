@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.generic import TemplateView, View
 
-from wyniki import models
+from wyniki import forms, models
 from wyniki.election_statistics import ElectionStatistics
 
 
@@ -29,3 +29,13 @@ class CommuneListJsonView(View):
         statistics = ElectionStatistics(candidates)
         commune_list = statistics.get_commune_list(category, code)
         return JsonResponse({"communeList": commune_list, 'status': 'OK'})
+
+
+class ChangeResultsJsonView(View):
+
+    def post(self, request):
+        form = forms.ChangeResults(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'OK'})
+        assert False
