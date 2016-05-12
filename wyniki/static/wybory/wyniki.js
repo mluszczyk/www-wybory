@@ -114,6 +114,7 @@ class ResultEditPopup extends Popup {
         Wyniki.jsonPromise("POST", url, data).then(function(data) {
             if (data.status === "OK") {
                 console.log("Success!");
+                location.reload();
             } else if (data.status == "formError") {
                 console.log(data['formErrors']);
             } else {
