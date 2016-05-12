@@ -6,6 +6,7 @@
     <title>Wybory 2005</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="{% static 'wybory/style.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'wybory/wyniki.js' %}"></script>
 </head>
 <body><a name="start"></a>
 <div class="dark-bg">
@@ -223,5 +224,9 @@
     <area shape="rect" coords="0,0,31,19" href="#" alt="">
     <area shape="rect" coords="42,0,73,19" href="#" alt="">
 </map>
+
+<script>
+    var wyniki = new Wyniki();
+</script>
 </body>
 </html>

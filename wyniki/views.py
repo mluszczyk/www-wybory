@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.views.generic import TemplateView, View
 
 from wyniki import models
@@ -19,3 +20,12 @@ class ResultsView(TemplateView):
                                    for model, summary in zip(data['candidates'], data['candidates_summary']))
 
         return data
+
+
+class CommuneListJsonView(View):
+
+    def get(self, request, category, code):
+        candidates = list(models.Kandydat.objects.all())
+        statistics = ElectionStatistics(candidates)
+        commune_list = statistics.get_commune_list(category, code)
+        return JsonResponse({"communeList": commune_list, 'status': 'OK'})

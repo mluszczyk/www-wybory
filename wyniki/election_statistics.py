@@ -2,6 +2,9 @@ import abc
 import enum
 from collections import namedtuple
 
+import itertools
+from typing import Union
+
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 
@@ -126,3 +129,41 @@ class ElectionStatistics:
     @staticmethod
     def format_fraction(fraction):
         return "{0:.4f}".format(fraction)
+
+    def get_commune_list(self, category, code):
+        group = self.get_statistic_group(category, code)
+        wyniki = group.queryset
+        grouped = self.pair_results_by_commune(wyniki)
+        result = []
+        for commune, candidate_a, candidate_b in grouped:
+            result.append(self.pack_result_pair(candidate_a, candidate_b, commune))
+        return result
+
+    def pair_results_by_commune(self, wyniki):
+        aggregates = ['liczba_glosow_kandydat_a', 'liczba_glosow_kandydat_b']
+        grouped = {}
+        for num, agg, candidate in zip(itertools.count(1), aggregates, self.candidates):
+            candidate_queryset = wyniki.filter(kandydat=candidate)
+            for result in candidate_queryset:
+                record = grouped.get(result.gmina.pk, [None, None, None])
+                record[0] = result.gmina
+                record[num] = result
+                grouped[result.gmina.pk] = record
+        return list(grouped.values())
+
+    @staticmethod
+    def pack_result_pair(result_a: Union[models.Wynik, None], result_b: Union[models.Wynik, None],
+                         commune: models.Gmina):
+        return {
+            'communePk': commune.pk,
+            'communeName': commune.nazwa,
+            'resultCandidateA': getattr(result_a, "liczba", None),
+            'resultCandidateB': getattr(result_b, "liczba", None)
+        }
+
+    @staticmethod
+    def get_statistic_group(category, code) -> StatisticRow:
+        statistics_list = STATISTICS[category]()
+        statistics_dict = {row.code: row for row in statistics_list}
+        group = statistics_dict[code]
+        return group
