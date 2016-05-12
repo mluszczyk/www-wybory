@@ -5,12 +5,18 @@ class Wyniki {   // should this be wrapped in an anonymous function?
 
     static showPopup(element) {
         let outerDiv = document.createElement("div");
+        let exit = Wyniki.createElement("p", "Proszę kliknąć na zewnątrz okienka, aby wyjść");
+        exit.classList.add("modal-popup-exit");
+        outerDiv.appendChild(exit);
         outerDiv.classList.add("modal-popup-container");
         outerDiv.onclick = function() {
             document.body.removeChild(outerDiv);
         };
         let div = document.createElement("div");
         outerDiv.appendChild(div);
+        div.onclick = function(e) {
+            e.stopPropagation();
+        };
         div.classList.add("modal-popup-content");
         div.appendChild(element);
         document.body.appendChild(outerDiv);

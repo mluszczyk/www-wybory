@@ -237,7 +237,7 @@ table {
 }
 
 .modal-popup-container {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.8);
     position: fixed;
     top: 0;
     left: 0;
@@ -250,4 +250,9 @@ table {
     max-width: 600px;
     margin: 50px auto;
     padding: 20px;
+}
+
+.modal-popup-exit {
+    font-style: italic;
+    margin-left: 10px;
 }
