@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
 from wyniki import forms, models
@@ -38,4 +40,5 @@ class ChangeResultsJsonView(View):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'OK'})
-        assert False
+        else:
+            return JsonResponse({'status': 'form_error'})

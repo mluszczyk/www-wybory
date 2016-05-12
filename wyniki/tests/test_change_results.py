@@ -1,3 +1,5 @@
+import json
+
 from django import test
 from django.core.urlresolvers import reverse
 
@@ -25,3 +27,9 @@ class ChangeResultsJsonViewTest(test.TestCase):
         self.assertEqual(response.status_code, 200)
         result = models.Wynik.objects.get(gmina=self.commune, kandydat=self.candidates[0])
         self.assertEqual(result.liczba, 123)
+
+    def test_post_wrong(self):
+        response = self.client.post(reverse("change-results"))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(data['status'], 'form_error')

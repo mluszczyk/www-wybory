@@ -256,3 +256,10 @@ table {
     font-style: italic;
     margin-left: 10px;
 }
+
+.edit-results {
+    border-radius: 4px;
+    padding: 0 2px;
+    font-size: smaller;
+    background: white;
+}

@@ -226,7 +226,8 @@
 </map>
 
 <script>
-    var wyniki = new Wyniki();
+    var csrfToken = "{{ csrf_token }}";
+    var wyniki = new Wyniki(csrfToken);
 </script>
 </body>
 </html>
