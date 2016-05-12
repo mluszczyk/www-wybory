@@ -44,7 +44,7 @@ class CommuneListPopup extends Popup {
             edit.classList.add("edit-results");
             edit.onclick = function() {
                 let popup = new ResultEditPopup(csrfToken, record['communePk'], record['resultCandidateA'],
-                    record['resultCandidateB']);
+                    record['resultCandidateB'], record['previousModification']);
                 popup.show();
             };
             var communeName = Wyniki.createElement("td", record['communeName']);
@@ -80,7 +80,7 @@ class ResultEditPopup extends Popup {
         return div;
     }
 
-    static getContent(csrfToken, communePk, resultCandidateA, resultCandidateB) {
+    static getContent(csrfToken, communePk, resultCandidateA, resultCandidateB, modification) {
         let header = Wyniki.createElement("h2", "Modyfikacja wyników");
         let form = document.createElement("form");
 
@@ -91,6 +91,7 @@ class ResultEditPopup extends Popup {
         form.appendChild(ResultEditPopup.createInput("candidate_a", "hidden", 1));
         form.appendChild(ResultEditPopup.createInput("candidate_b", "hidden", 2));
         form.appendChild(ResultEditPopup.createInput("csrfmiddlewaretoken", "hidden", csrfToken));
+        form.appendChild(ResultEditPopup.createInput("modification", "hidden", modification));
         form.appendChild(ResultEditPopup.createInputRow("result_a", "number", resultCandidateA, "Wynik kandydata A"));
         form.appendChild(ResultEditPopup.createInputRow("result_b", "number", resultCandidateB, "Wynik kandydata B"));
         form.appendChild(ResultEditPopup.saveButton());
@@ -117,6 +118,10 @@ class ResultEditPopup extends Popup {
                 location.reload();
             } else if (data.status == "formError") {
                 console.log(data['formErrors']);
+            } else if (data.status == "outdatedModification") {
+                let modification = data['modified'];
+                errorDiv.innerHTML = `Wyniki zostały zmodyfikowane o ${modification}. Kliknij zapisz ponownie, by nadpisać.`;
+                form.modification.value = modification;
             } else {
                 console.log(data.status);
             }
@@ -133,8 +138,8 @@ class ResultEditPopup extends Popup {
         return save;
     }
 
-    constructor(csrfToken, communePk, resultCandidateA, resultCandidateB) {
-        super(ResultEditPopup.getContent(csrfToken, communePk, resultCandidateA, resultCandidateB));
+    constructor(csrfToken, communePk, resultCandidateA, resultCandidateB, modification) {
+        super(ResultEditPopup.getContent(csrfToken, communePk, resultCandidateA, resultCandidateB, modification));
     }
 }
 

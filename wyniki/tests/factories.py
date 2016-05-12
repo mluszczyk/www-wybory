@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 
@@ -19,6 +22,7 @@ class GminaFactory(DjangoModelFactory):
     liczba_uprawnionych = 70000
     liczba_wydanych_kart = 50000
     liczba_glosow_oddanych = 45500
+    data_modyfikacji = timezone.make_aware(datetime.datetime(2002, 2, 2))
 
     class Meta:
         model = models.Gmina

@@ -15,13 +15,14 @@ class TestElectionStatistic(test.TestCase):
     def test_pack_result_pair(self):
         paired = ElectionStatistics.pack_result_pair(self.wynik_a, self.wynik_b, self.warszawa)
         self.assertEqual(paired, {"communePk": self.warszawa.pk, "communeName": "Warszawa",
-                                  "resultCandidateA": 7, "resultCandidateB": 5})
+                                  "resultCandidateA": 7, "resultCandidateB": 5,
+                                  'previousModification': 'Sat Feb  2 00:00:00 2002'})
 
     def test_pack_result_pair_nones(self):
         gmina = factories.GminaFactory(nazwa="Pruszków", wojewodztwo=self.warszawa.wojewodztwo)
         paired = ElectionStatistics.pack_result_pair(None, None, gmina)
-        self.assertEqual(paired, {"communePk": gmina.pk, "communeName": "Pruszków",
-                                  "resultCandidateA": None, "resultCandidateB": None})
+        self.assertIsNone(paired["resultCandidateA"])
+        self.assertIsNone(paired["resultCandidateB"])
 
     def test_pair_results_by_commune(self):
         es = ElectionStatistics(self.candidates)

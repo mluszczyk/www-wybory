@@ -158,7 +158,8 @@ class ElectionStatistics:
             'communePk': commune.pk,
             'communeName': commune.nazwa,
             'resultCandidateA': getattr(result_a, "liczba", None),
-            'resultCandidateB': getattr(result_b, "liczba", None)
+            'resultCandidateB': getattr(result_b, "liczba", None),
+            'previousModification': commune.data_modyfikacji.strftime("%c"),
         }
 
     @staticmethod

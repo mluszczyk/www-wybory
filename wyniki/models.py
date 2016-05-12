@@ -34,6 +34,7 @@ class Gmina(models.Model):
     liczba_uprawnionych = models.IntegerField()
     liczba_wydanych_kart = models.IntegerField()
     liczba_glosow_oddanych = models.IntegerField()
+    data_modyfikacji = models.DateTimeField()
 
     def __str__(self):
         return self.nazwa
