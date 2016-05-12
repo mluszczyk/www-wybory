@@ -3,11 +3,17 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         this.mapLinks();
     }
 
-    static showPopup(text) {
+    static showPopup(element) {
+        let outerDiv = document.createElement("div");
+        outerDiv.classList.add("modal-popup-container");
+        outerDiv.onclick = function() {
+            document.body.removeChild(outerDiv);
+        };
         let div = document.createElement("div");
-        div.classList.add("modal-popup");
-        div.innerHTML = text;
-        document.body.appendChild(div);
+        outerDiv.appendChild(div);
+        div.classList.add("modal-popup-content");
+        div.appendChild(element);
+        document.body.appendChild(outerDiv);
     }
 
     mapLinks() {
@@ -43,10 +49,36 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         return this.jsonPromise("/commune-list/" + category + "/" + code + "/");
     }
 
+    static createElement(name, content) {
+        let elem = document.createElement(name);
+        elem.innerHTML = content;
+        return elem;
+    }
+
+    static showCommuneListPopup(communeList) {
+        let div = document.createElement("div");
+        let header = document.createElement("h2");
+        header.innerHTML = "Wyniki w wybranych gminach ";
+        div.appendChild(header);
+        let table = document.createElement("table");
+        if (communeList.length === 0) {
+            div.appendChild(Wyniki.createElement("p", "Lista pusta"));
+        }
+        for (let record of communeList) {
+            let row = document.createElement("tr");
+            table.appendChild(row);
+            row.appendChild(Wyniki.createElement("td", record['communeName']));
+            row.appendChild(Wyniki.createElement("td", record['resultCandidateA']));
+            row.appendChild(Wyniki.createElement("td", record['resultCandidateB']));
+        }
+        div.appendChild(table);
+        Wyniki.showPopup(div);
+    }
+
     openCommuneListPopup(category, code) {
         let dataPromise = this.fetchCommuneList(category, code);
         dataPromise.then(function(data) {
-            console.log(data);
+            Wyniki.showCommuneListPopup(data['communeList']);
         }).catch(function(message) {
             console.log(message);
         });
