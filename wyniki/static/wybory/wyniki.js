@@ -24,22 +24,22 @@ class Popup {
 }
 
 class CommuneListPopup extends Popup {
-    constructor(csrfToken, isLoggedIn, communeList) {
-        super(CommuneListPopup.getContent(csrfToken, isLoggedIn, communeList));
+    constructor(csrfToken, isLoggedIn, candidateA, candidateB, communeList) {
+        super(CommuneListPopup.getContent(csrfToken, isLoggedIn, candidateA, candidateB, communeList));
     }
 
-    static getEditButton(csrfToken, record) {
+    static getEditButton(csrfToken, candidateA, candidateB, record) {
         let edit = Wyniki.createElement("span", "✎ Edycja");
         edit.classList.add("edit-results");
         edit.onclick = function() {
-            let popup = new ResultEditPopup(csrfToken, record['communePk'], record['resultCandidateA'],
+            let popup = new ResultEditPopup(csrfToken, record['communePk'], candidateA, candidateB, record['resultCandidateA'],
                 record['resultCandidateB'], record['previousModification']);
             popup.show();
         };
         return edit;
     }
 
-    static getContent(csrfToken, isLoggedIn, communeList) {
+    static getContent(csrfToken, isLoggedIn, candidateA, candidateB, communeList) {
         let div = document.createElement("div");
         let header = document.createElement("h2");
         header.innerHTML = "Wyniki w wybranych gminach ";
@@ -53,7 +53,7 @@ class CommuneListPopup extends Popup {
             table.appendChild(row);
             var communeName = Wyniki.createElement("td", record['communeName']);
             if (isLoggedIn) {
-                let edit = CommuneListPopup.getEditButton(csrfToken, record);
+                let edit = CommuneListPopup.getEditButton(csrfToken, candidateA, candidateB, record);
                 communeName.appendChild(document.createTextNode(" "));
                 communeName.appendChild(edit);
             }
@@ -87,7 +87,7 @@ class ResultEditPopup extends Popup {
         return div;
     }
 
-    static getContent(csrfToken, communePk, resultCandidateA, resultCandidateB, modification) {
+    static getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification) {
         let header = Wyniki.createElement("h2", "Modyfikacja wyników");
         let form = document.createElement("form");
 
@@ -95,12 +95,12 @@ class ResultEditPopup extends Popup {
         errorDiv.classList.add("error-div");
         form.appendChild(errorDiv);
         form.appendChild(ResultEditPopup.createInput("commune", "hidden", communePk));
-        form.appendChild(ResultEditPopup.createInput("candidate_a", "hidden", 1));
-        form.appendChild(ResultEditPopup.createInput("candidate_b", "hidden", 2));
+        form.appendChild(ResultEditPopup.createInput("candidate_a", "hidden", candidateA.pk));
+        form.appendChild(ResultEditPopup.createInput("candidate_b", "hidden", candidateB.pk));
         form.appendChild(ResultEditPopup.createInput("csrfmiddlewaretoken", "hidden", csrfToken));
         form.appendChild(ResultEditPopup.createInput("modification", "hidden", modification));
-        form.appendChild(ResultEditPopup.createInputRow("result_a", "number", resultCandidateA, "Wynik kandydata A"));
-        form.appendChild(ResultEditPopup.createInputRow("result_b", "number", resultCandidateB, "Wynik kandydata B"));
+        form.appendChild(ResultEditPopup.createInputRow("result_a", "number", resultCandidateA, `Wynik kandydata ${candidateA.name}`));
+        form.appendChild(ResultEditPopup.createInputRow("result_b", "number", resultCandidateB, `Wynik kandydata ${candidateB.name}`));
         form.appendChild(ResultEditPopup.saveButton());
 
         let div = document.createElement("div");
@@ -148,16 +148,18 @@ class ResultEditPopup extends Popup {
         return save;
     }
 
-    constructor(csrfToken, communePk, resultCandidateA, resultCandidateB, modification) {
-        super(ResultEditPopup.getContent(csrfToken, communePk, resultCandidateA, resultCandidateB, modification));
+    constructor(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification) {
+        super(ResultEditPopup.getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification));
     }
 }
 
 class Wyniki {   // should this be wrapped in an anonymous function?
-    constructor(csrfToken, username) {
+    constructor(csrfToken, username, candidateA, candidateB) {
         this.csrfToken = csrfToken;
         this.username = username;
         this.loginBar = document.querySelector(".login-container");
+        this.candidateA = candidateA;
+        this.candidateB = candidateB;
         this.mapLinks();
         this.setLoginBar();
     }
@@ -255,7 +257,8 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         let dataPromise = Wyniki.fetchCommuneList(category, code);
         let app = this;
         dataPromise.then(function(data) {
-            let popup = new CommuneListPopup(app.csrfToken, app.username.length > 0, data['communeList']);
+            let popup = new CommuneListPopup(app.csrfToken, app.username.length > 0,
+                app.candidateA, app.candidateB, data['communeList']);
             popup.show();
         }).catch(function(message) {
             console.log(message);

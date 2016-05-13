@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -23,6 +25,7 @@ class ResultsView(TemplateView):
         data['candidates'] = statistics.get_candidates()
         data['candidates_data'] = ({'model': model, 'summary': summary}
                                    for model, summary in zip(data['candidates'], data['candidates_summary']))
+        data['candidates_json'] = json.dumps([{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates])
 
         return data
 

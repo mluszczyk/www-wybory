@@ -229,7 +229,8 @@
 <script>
     var username = "{{ user.username }}";
     var csrfToken = "{{ csrf_token }}";
-    var wyniki = new Wyniki(csrfToken, username);
+    var candidates = JSON.parse("{{ candidates_json | escapejs }}");
+    var wyniki = new Wyniki(csrfToken, username, candidates[0], candidates[1]);
 </script>
 </body>
 </html>
