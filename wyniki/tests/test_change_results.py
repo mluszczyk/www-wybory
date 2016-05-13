@@ -65,3 +65,20 @@ class ChangeResultsJsonViewTest(test.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(data['status'], 'formError')
+
+    def test_post_overflow(self):
+        wynik = models.Wynik.objects.create(gmina=self.commune, kandydat=self.candidates[0], liczba=1000)
+        data = {
+            'commune': self.commune.pk,
+            'result_a': 30000,
+            'candidate_a': self.candidates[0].pk,
+            'result_b': 20000,
+            'candidate_b': self.candidates[1].pk,
+            'modification': self.commune.data_modyfikacji.strftime("%c")
+        }
+        response = self.client.post(reverse("change-results"), data)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(data['status'], 'saveFailed')
+        wynik.refresh_from_db()
+        self.assertEqual(wynik.liczba, 1000)

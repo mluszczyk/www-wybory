@@ -1,5 +1,7 @@
 from django import forms
+from django.db import transaction
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 
 from wyniki import models
 
@@ -27,6 +29,7 @@ class ChangeResults(forms.Form):
         if result is None:
             result = models.Wynik(gmina=commune, kandydat=candidate)
         result.liczba = number
+        result.full_clean()
         result.save()
 
     def validate_commune(self):
@@ -35,6 +38,7 @@ class ChangeResults(forms.Form):
             raise OutdatedModificationError(user=commune.uzytkownik,
                                             last=commune.data_modyfikacji)
 
+    @method_decorator(transaction.atomic)
     def save(self, user):
         commune = self.cleaned_data['commune']
         self.validate_commune()

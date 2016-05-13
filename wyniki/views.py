@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -50,6 +50,8 @@ class ChangeResultsJsonView(View):
                 return JsonResponse({'status': 'outdatedModification',
                                      'modified': e.last.strftime('%c'),
                                      'user': e.user.username})
+            except ValidationError as e:
+                return JsonResponse({"status": "saveFailed", "messageDict": e.message_dict})
             else:
                 return JsonResponse({'status': 'OK'})
         else:

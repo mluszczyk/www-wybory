@@ -130,6 +130,8 @@ class ResultEditPopup extends Popup {
                 let user = data['user'];
                 errorDiv.innerHTML = `Wyniki zostały zmodyfikowane o ${modification} przez ${user}. Kliknij zapisz ponownie, by nadpisać.`;
                 form.modification.value = modification;
+            } else if (data.status == "saveFailed") {
+                errorDiv.innerHTML = `Suma głosów przekroczyła liczbę głosów oddanych.`;
             } else {
                 console.log(data.status);
             }
