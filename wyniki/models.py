@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
@@ -35,6 +36,7 @@ class Gmina(models.Model):
     liczba_wydanych_kart = models.IntegerField()
     liczba_glosow_oddanych = models.IntegerField()
     data_modyfikacji = models.DateTimeField()
+    uzytkownik = models.ForeignKey(User)
 
     def __str__(self):
         return self.nazwa

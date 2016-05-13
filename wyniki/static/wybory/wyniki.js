@@ -127,7 +127,8 @@ class ResultEditPopup extends Popup {
                 console.log(data['formErrors']);
             } else if (data.status == "outdatedModification") {
                 let modification = data['modified'];
-                errorDiv.innerHTML = `Wyniki zostały zmodyfikowane o ${modification}. Kliknij zapisz ponownie, by nadpisać.`;
+                let user = data['user'];
+                errorDiv.innerHTML = `Wyniki zostały zmodyfikowane o ${modification} przez ${user}. Kliknij zapisz ponownie, by nadpisać.`;
                 form.modification.value = modification;
             } else {
                 console.log(data.status);

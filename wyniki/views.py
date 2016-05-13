@@ -45,10 +45,11 @@ class ChangeResultsJsonView(View):
         form = forms.ChangeResults(request.POST)
         if form.is_valid():
             try:
-                form.save()
+                form.save(request.user)
             except forms.OutdatedModificationError as e:
                 return JsonResponse({'status': 'outdatedModification',
-                                     'modified': e.last.strftime('%c')})
+                                     'modified': e.last.strftime('%c'),
+                                     'user': e.user.username})
             else:
                 return JsonResponse({'status': 'OK'})
         else:

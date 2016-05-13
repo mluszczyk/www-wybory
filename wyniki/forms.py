@@ -13,7 +13,6 @@ class OutdatedModificationError(Exception):
         return "Wrong modification date. User provided {}, expected {}".format(self.user, self.last)
 
 
-
 class ChangeResults(forms.Form):
     commune = forms.ModelChoiceField(models.Gmina.objects.all())
     candidate_a = forms.ModelChoiceField(models.Kandydat.objects.all())
@@ -33,13 +32,14 @@ class ChangeResults(forms.Form):
     def validate_commune(self):
         commune = self.cleaned_data['commune']
         if commune.data_modyfikacji.replace(microsecond=0) != self.cleaned_data['modification']:
-            raise OutdatedModificationError(user=self.cleaned_data['modification'],
+            raise OutdatedModificationError(user=commune.uzytkownik,
                                             last=commune.data_modyfikacji)
 
-    def save(self):
+    def save(self, user):
         commune = self.cleaned_data['commune']
         self.validate_commune()
         self.save_result(commune, self.cleaned_data['candidate_a'], self.cleaned_data['result_a'])
         self.save_result(commune, self.cleaned_data['candidate_b'], self.cleaned_data['result_b'])
         commune.data_modyfikacji = timezone.now()
+        commune.uzytkownik = user
         commune.save()

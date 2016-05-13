@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.utils import timezone
 from factory import SubFactory
 from factory.django import DjangoModelFactory
@@ -14,6 +15,13 @@ class WojewodztwoFactory(DjangoModelFactory):
         model = models.Wojewodztwo
 
 
+class UzytkownikFactory(DjangoModelFactory):
+    username = "jan"
+
+    class Meta:
+        model = User
+
+
 class GminaFactory(DjangoModelFactory):
     nazwa = "Pruszków"
     rodzaj = models.Gmina.RODZAJ_MIASTO
@@ -23,6 +31,7 @@ class GminaFactory(DjangoModelFactory):
     liczba_wydanych_kart = 50000
     liczba_glosow_oddanych = 45500
     data_modyfikacji = timezone.make_aware(datetime.datetime(2002, 2, 2))
+    uzytkownik = SubFactory(UzytkownikFactory)
 
     class Meta:
         model = models.Gmina

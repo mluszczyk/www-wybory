@@ -19,7 +19,8 @@ class TestElectionStatistic(test.TestCase):
                                   'previousModification': 'Sat Feb  2 00:00:00 2002'})
 
     def test_pack_result_pair_nones(self):
-        gmina = factories.GminaFactory(nazwa="Pruszków", wojewodztwo=self.warszawa.wojewodztwo)
+        gmina = factories.GminaFactory(nazwa="Pruszków", wojewodztwo=self.warszawa.wojewodztwo,
+                                       uzytkownik=self.warszawa.uzytkownik)
         paired = ElectionStatistics.pack_result_pair(None, None, gmina)
         self.assertIsNone(paired["resultCandidateA"])
         self.assertIsNone(paired["resultCandidateB"])
