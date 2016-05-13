@@ -24,11 +24,22 @@ class Popup {
 }
 
 class CommuneListPopup extends Popup {
-    constructor(csrfToken, communeList) {
-        super(CommuneListPopup.getContent(csrfToken, communeList));
+    constructor(csrfToken, isLoggedIn, communeList) {
+        super(CommuneListPopup.getContent(csrfToken, isLoggedIn, communeList));
     }
 
-    static getContent(csrfToken, communeList) {
+    static getEditButton(csrfToken, record) {
+        let edit = Wyniki.createElement("span", "✎ Edycja");
+        edit.classList.add("edit-results");
+        edit.onclick = function() {
+            let popup = new ResultEditPopup(csrfToken, record['communePk'], record['resultCandidateA'],
+                record['resultCandidateB'], record['previousModification']);
+            popup.show();
+        };
+        return edit;
+    }
+
+    static getContent(csrfToken, isLoggedIn, communeList) {
         let div = document.createElement("div");
         let header = document.createElement("h2");
         header.innerHTML = "Wyniki w wybranych gminach ";
@@ -40,16 +51,12 @@ class CommuneListPopup extends Popup {
         for (let record of communeList) {
             let row = document.createElement("tr");
             table.appendChild(row);
-            let edit = Wyniki.createElement("span", "✎ Edycja");
-            edit.classList.add("edit-results");
-            edit.onclick = function() {
-                let popup = new ResultEditPopup(csrfToken, record['communePk'], record['resultCandidateA'],
-                    record['resultCandidateB'], record['previousModification']);
-                popup.show();
-            };
             var communeName = Wyniki.createElement("td", record['communeName']);
-            communeName.appendChild(document.createTextNode(" "));
-            communeName.appendChild(edit);
+            if (isLoggedIn) {
+                let edit = CommuneListPopup.getEditButton(csrfToken, record);
+                communeName.appendChild(document.createTextNode(" "));
+                communeName.appendChild(edit);
+            }
             row.appendChild(communeName);
             row.appendChild(Wyniki.createElement("td", record['resultCandidateA']));
             row.appendChild(Wyniki.createElement("td", record['resultCandidateB']));
@@ -144,15 +151,64 @@ class ResultEditPopup extends Popup {
 }
 
 class Wyniki {   // should this be wrapped in an anonymous function?
-    constructor(csrfToken) {
+    constructor(csrfToken, username) {
         this.csrfToken = csrfToken;
+        this.username = username;
+        this.loginBar = document.querySelector(".login-container");
         this.mapLinks();
+        this.setLoginBar();
     }
 
     static createElement(name, content) {
         let elem = document.createElement(name);
         elem.innerHTML = content;
         return elem;
+    }
+
+    login(form) {
+        let data = new FormData(form);
+        let app = this;
+        Wyniki.jsonPromise("POST", "/ajax-login/", data).then(function() {
+            console.log("Logged in");
+            app.username = form.username.value;
+            app.setLoginBar();
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
+
+    createLoginForm() {
+        let csrf = ResultEditPopup.createInput("csrfmiddlewaretoken", "hidden", this.csrfToken);
+        let usernameLabel = Wyniki.createElement("label", "Nazwa użytkownika");
+        let username = ResultEditPopup.createInput("username", "username", "");
+        let passwordLabel = Wyniki.createElement("label", "Hasło");
+        let password = ResultEditPopup.createInput("password", "password", "");
+        let loginForm = document.createElement("form");
+        let submit = ResultEditPopup.createInput("submit", "button", "Zaloguj");
+        let wyniki = this;
+        submit.onclick = function() {
+            let form = this.form;
+            wyniki.login(form);
+        };
+        loginForm.appendChild(csrf);
+        loginForm.appendChild(usernameLabel);
+        loginForm.appendChild(document.createTextNode(" "));
+        loginForm.appendChild(username);
+        loginForm.appendChild(document.createTextNode(" "));
+        loginForm.appendChild(passwordLabel);
+        loginForm.appendChild(document.createTextNode(" "));
+        loginForm.appendChild(password);
+        loginForm.appendChild(submit);
+        return loginForm;
+    }
+
+    setLoginBar() {
+        if (this.username.length === 0) {
+            this.loginBar.innerHTML = "";
+            this.loginBar.appendChild(this.createLoginForm());
+        } else {
+            this.loginBar.innerHTML = `Dzień dobry, ${this.username}`;
+        }
     }
 
     mapLinks() {
@@ -196,7 +252,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         let dataPromise = Wyniki.fetchCommuneList(category, code);
         let app = this;
         dataPromise.then(function(data) {
-            let popup = new CommuneListPopup(app.csrfToken, data['communeList']);
+            let popup = new CommuneListPopup(app.csrfToken, app.username.length > 0, data['communeList']);
             popup.show();
         }).catch(function(message) {
             console.log(message);

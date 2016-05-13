@@ -32,6 +32,7 @@
 
 <div class="container main">
 <div class="content">
+    <p class="login-container"></p>
     <div class="left-pane">
         <div class="summary main-element">
             <p class="header">Polska</p>
@@ -226,8 +227,9 @@
 </map>
 
 <script>
+    var username = "{{ user.username }}";
     var csrfToken = "{{ csrf_token }}";
-    var wyniki = new Wyniki(csrfToken);
+    var wyniki = new Wyniki(csrfToken, username);
 </script>
 </body>
 </html>

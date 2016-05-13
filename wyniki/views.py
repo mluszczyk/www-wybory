@@ -1,3 +1,6 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -34,6 +37,9 @@ class CommuneListJsonView(View):
 
 
 class ChangeResultsJsonView(View):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
         form = forms.ChangeResults(request.POST)
@@ -50,3 +56,16 @@ class ChangeResultsJsonView(View):
                 'status': 'formError',
                 'formErrors': form.errors
             })
+
+
+class AjaxLogin(View):
+
+    def post(self, request):
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(username=username, password=password)
+        if user is None:
+            raise PermissionDenied("Login failed")
+        else:
+            login(request, user)
+            return JsonResponse({"status": "OK"})
