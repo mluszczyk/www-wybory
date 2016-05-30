@@ -5,11 +5,8 @@ function fillInStatistics(data, attribute) {
         }
         let selector = `[${attribute}='${key}']`;
         let elements = document.querySelectorAll(selector);
-        console.log(key);
-        console.log(elements.length);
         for (let i = 0; i < elements.length; ++i) {
             let element = elements[i];
-            console.log("Set for ", element);
             element.innerHTML = data[key];
         }
     }
