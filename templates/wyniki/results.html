@@ -88,30 +88,35 @@
                 <li><a href="#" data-statistics="kandydat_b_nazwa"></a></li>
             </ul>
         </div>
-
         <table class="main-element scoreboard header">
-            {% for candidate in candidates_data %}
-                {% with 0 as counter %}
-                <tr>
-                    <td colspan="3">
-                        <a href="#">{{ candidate.model.nazwa }}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="meter {% if forloop.counter == 1 %}primary-empty{% else %}secondary-empty{% endif %}">
-                            <span style="width: {{ candidate.summary.percent }}%"></span>
-                        </div>
-                    </td>
-                    <td>
-                        {{ candidate.summary.percent }}%
-                    </td>
-                    <td>
-                        {{ candidate.summary.count }}
-                    </td>
-                </tr>
-                {%  endwith %}
-            {% endfor %}
+            <tr>
+                <td colspan="3">
+                    <a href="#" data-statistics="kandydat_a_nazwa"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="meter secondary-empty">
+                        <span data-width="kandydat_a_procent"></span>
+                    </div>
+                </td>
+                <td><span data-statistics="kandydat_a_procent"></span>%</td>
+                <td data-statistics="liczba_glosow_kandydat_a"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <a href="#" data-statistics="kandydat_b_nazwa"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="meter primary-empty">
+                        <span data-width="kandydat_b_procent"></span>
+                    </div>
+                </td>
+                <td><span data-statistics="kandydat_b_procent"></span>%</td>
+                <td data-statistics="liczba_glosow_kandydat_b"></td>
+            </tr>
         </table>
 
     </div>

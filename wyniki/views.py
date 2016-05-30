@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
 from wyniki import forms, models
@@ -22,9 +21,6 @@ class ResultsView(TemplateView):
         data['voivodeship_statistics'] = statistics.get_statistics("voivodeship")
         data['commune_type_statistics'] = statistics.get_statistics("commune_type")
         data['commune_size_statistics'] = statistics.get_statistics("commune_size")
-        data['candidates'] = statistics.get_candidates()
-        data['candidates_data'] = ({'model': model, 'summary': summary}
-                                   for model, summary in zip(data['candidates'], data['candidates_summary']))
         data['javascript_data'] = json.dumps({
             'general': statistics.get_general_statistics(),
             'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates]

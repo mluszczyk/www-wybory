@@ -1,4 +1,4 @@
-function fillInStatistics(data, attribute) {
+function fillInStatistics(data, attribute, func) {
     for (var key in data) {
         if (!data.hasOwnProperty(key)) {
             continue;
@@ -7,7 +7,7 @@ function fillInStatistics(data, attribute) {
         let elements = document.querySelectorAll(selector);
         for (let i = 0; i < elements.length; ++i) {
             let element = elements[i];
-            element.innerHTML = data[key];
+            func(element, data[key]);
         }
     }
 }
@@ -178,7 +178,8 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         this.setLoginBar();
         var candidates = statistics.candidates;
 
-        fillInStatistics(statistics.general, "data-statistics");
+        fillInStatistics(statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
+        fillInStatistics(statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
 
     }
 

@@ -120,7 +120,10 @@ class ElectionStatistics:
                 'percent': self.format_percent(fraction),
             })
         data['kandydat_a_nazwa'] = self.candidates[0].nazwa
+        data['kandydat_a_procent'] = data['candidates_summary'][0]['percent']
         data['kandydat_b_nazwa'] = self.candidates[1].nazwa
+        data['kandydat_b_procent'] = data['candidates_summary'][1]['percent']
+
         return data
 
     @staticmethod
