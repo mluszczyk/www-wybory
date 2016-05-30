@@ -40,34 +40,34 @@
             <table class="tworows">
                 <tr>
                     <td>Liczba mieszkańców:</td>
-                    <td>{{ liczba_mieszkancow }}</td>
+                    <td data-statistics="liczba_mieszkancow"></td>
                 </tr>
                 <tr>
                     <td>Powierzchnia:</td>
-                    <td>{{ powierzchnia }} km2</td>
+                    <td><span data-statistics="powierzchnia"></span> km2</td>
                 </tr>
                 <tr>
                     <td>Zaludnienie:</td>
-                    <td>{{ zaludnienie|floatformat }} os/km2</td>
+                    <td><span data-statistics="zaludnienie"></span> os/km2</td>
                 </tr>
             </table>
             <p class="summary-emphasis">Zbiorcze wyniki głosowania</p>
             <table class="tworows">
                 <tr>
                     <td>Liczba uprawnionych:</td>
-                    <td>{{ liczba_uprawnionych }}</td>
+                    <td data-statistics="liczba_uprawnionych"></td>
                 </tr>
                 <tr>
                     <td>Liczba wydanych kart:</td>
-                    <td>{{ liczba_wydanych_kart }}</td>
+                    <td data-statistics="liczba_wydanych_kart"></td>
                 </tr>
                 <tr>
                     <td>Liczba głosów oddanych:</td>
-                    <td>{{ liczba_glosow_oddanych }}</td>
+                    <td data-statistics="liczba_glosow_oddanych"></td>
                 </tr>
                 <tr>
                     <td>Liczba głosów ważnych:</td>
-                    <td>{{ liczba_glosow_waznych }}</td>
+                    <td data-statistics="liczba_glosow_waznych"></td>
                 </tr>
             </table>
         </div>
@@ -229,8 +229,8 @@
 <script>
     var username = "{{ user.username }}";
     var csrfToken = "{{ csrf_token }}";
-    var candidates = JSON.parse("{{ candidates_json | escapejs }}");
-    var wyniki = new Wyniki(csrfToken, username, candidates[0], candidates[1]);
+    var statistics = JSON.parse("{{ javascript_data | escapejs }}");
+    var wyniki = new Wyniki(csrfToken, username, statistics);
 </script>
 </body>
 </html>

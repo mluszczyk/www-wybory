@@ -108,7 +108,7 @@ class ElectionStatistics:
             data.update(result)
         data.update(self.get_vote_aggregates(models.Wynik.objects.all()))
         data['powierzchnia'] = 312685
-        data['zaludnienie'] = data['liczba_mieszkancow'] / data['powierzchnia']
+        data['zaludnienie'] = round(data['liczba_mieszkancow'] / data['powierzchnia'], 2)
         data['liczba_glosow_waznych'] = data['liczba_glosow_kandydat_a'] + data['liczba_glosow_kandydat_b']
         data['candidates_summary'] = []
         for num, letter in enumerate(['a', 'b']):

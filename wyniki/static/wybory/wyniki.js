@@ -1,3 +1,20 @@
+function fillInStatistics(data, attribute) {
+    for (var key in data) {
+        if (!data.hasOwnProperty(key)) {
+            continue;
+        }
+        let selector = `[${attribute}='${key}']`;
+        let elements = document.querySelectorAll(selector);
+        console.log(key);
+        console.log(elements.length);
+        for (let i = 0; i < elements.length; ++i) {
+            let element = elements[i];
+            console.log("Set for ", element);
+            element.innerHTML = data[key];
+        }
+    }
+}
+
 class Popup {
     constructor(element) {
         this.content = element;
@@ -154,14 +171,18 @@ class ResultEditPopup extends Popup {
 }
 
 class Wyniki {   // should this be wrapped in an anonymous function?
-    constructor(csrfToken, username, candidateA, candidateB) {
+    constructor(csrfToken, username, statistics) {
         this.csrfToken = csrfToken;
         this.username = username;
         this.loginBar = document.querySelector(".login-container");
-        this.candidateA = candidateA;
-        this.candidateB = candidateB;
+        this.candidateA = statistics.candidates[0];
+        this.candidateB = statistics.candidates[1];
         this.mapLinks();
         this.setLoginBar();
+        var candidates = statistics.candidates;
+
+        fillInStatistics(statistics.general, "data-statistics");
+
     }
 
     static createElement(name, content) {
