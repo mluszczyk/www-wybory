@@ -43,9 +43,9 @@ class ResultsView(TemplateView):
     template_name = "wyniki/results.html"
 
     def get_context_data(self, **kwargs):
+        data = {}
         candidates = list(models.Kandydat.objects.all())
         statistics = ElectionStatistics(candidates)
-        data = statistics.get_general_statistics()
         data['javascript_data'] = json.dumps({
             'general': statistics.get_general_statistics(),
             'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates],

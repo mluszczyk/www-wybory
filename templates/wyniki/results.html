@@ -1,4 +1,4 @@
-{% load wyniki static %}
+{% load static %}
 
 <!DOCTYPE HTML>
 <html>
@@ -165,7 +165,19 @@
         </thead>
         <tbody data-table="voivodeship"></tbody>
         <tbody>
-        {% row "Σ" None None "Polska" liczba_glosow_kandydat_a liczba_glosow_kandydat_b cls="summary" %}
+        <tr class="summary">
+            <td class="number col46">Σ</td>
+            <td class="description col180">Polska</td>
+            <td class="number col90" data-statistics="liczba_glosow_waznych"></td>
+            <td class="number col90" data-statistics="liczba_glosow_kandydat_a"></td>
+            <td class="number col65" data-statistics="kandydat_a_procent"></td>
+            <td class="col320">
+                <div class="meter primary-secondary">
+                    <span data-width="kandydat_a_procent"></span>
+                </div>
+            <td class="number col65" data-statistics="kandydat_b_procent"></td>
+            <td class="number col90" data-statistics="liczba_glosow_kandydat_b"></td>
+        </tr>
         </tbody>
     </table>
 
