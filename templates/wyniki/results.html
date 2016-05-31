@@ -7,6 +7,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="{% static 'wybory/style.css' %}" rel="stylesheet" type="text/css">
     <script src="{% static 'wybory/wyniki.js' %}"></script>
+
+    <template id="row-template">
+        <tr>
+            <td class="number col46" data-row-statistics="numer"></td>
+            <td class="description col180"><span data-row-statistics="nazwa" data-row-link></span></td>
+            <td class="number col90" data-row-statistics="liczba_waznych_glosow"></td>
+            <td class="number col90" data-row-statistics="liczba_a"></td>
+            <td class="number col65" data-row-statistics="procent_a_tekst"></td>
+            <td class="col320" data-meter></td>
+            <td class="number col65" data-row-statistics="procent_b_tekst"></td>
+            <td class="number col90" data-row-statistics="liczba_b"></td>
+        </tr>
+    </template>
 </head>
 <body><a name="start"></a>
 <div class="dark-bg">
@@ -150,11 +163,7 @@
             <td>liczba</td>
         </tr>
         </thead>
-        <tbody>
-        {% for item in voivodeship_statistics %}
-            {% row forloop.counter 'voivodeship' item.kod item.nazwa|stringformat:"s, woj." item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
-        {% endfor %}
-        </tbody>
+        <tbody id="voivodeship-statistics-table"></tbody>
         <tbody>
         {% row "Σ" None None "Polska" liczba_glosow_kandydat_a liczba_glosow_kandydat_b cls="summary" %}
         </tbody>

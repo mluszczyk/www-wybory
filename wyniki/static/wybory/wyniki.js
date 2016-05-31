@@ -1,10 +1,10 @@
-function fillInStatistics(data, attribute, func) {
+function fillInStatistics(context, data, attribute, func) {
     for (var key in data) {
         if (!data.hasOwnProperty(key)) {
             continue;
         }
         let selector = `[${attribute}='${key}']`;
-        let elements = document.querySelectorAll(selector);
+        let elements = context.querySelectorAll(selector);
         for (let i = 0; i < elements.length; ++i) {
             let element = elements[i];
             func(element, data[key]);
@@ -176,10 +176,39 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         this.candidateB = statistics.candidates[1];
         this.mapLinks();
         this.setLoginBar();
-        var candidates = statistics.candidates;
 
-        fillInStatistics(statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
-        fillInStatistics(statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
+        fillInStatistics(document, statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
+        fillInStatistics(document, statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
+        this.fillInTable(statistics.tables['voivodeship_statistics_table'], 'voivodeship-statistics-table');
+
+    }
+
+
+    createRow(rowData) {
+        let rowTemplate = document.getElementById("row-template").content;
+        let row = document.importNode(rowTemplate, true);
+        fillInStatistics(row, rowData, "data-row-statistics", function(item, value) {item.innerHTML = value;});
+        let link = row.querySelector("[data-row-link]");
+        let wyniki = this;
+        link.onclick = function() {
+            wyniki.openCommuneListPopup(rowData['kategoria'], rowData['kod'])
+        };
+        if (rowData['liczba_waznych_glosow'] !== null) {
+            let meterContainer = row.querySelector("[data-meter");
+            meterContainer.innerHTML = `<div class="meter primary-secondary">
+                <span style="width: ${rowData["procent_a_tekst"]}%"></span>
+            </div>`;
+        }
+
+        return row;
+    }
+
+    fillInTable(data, tbodyId) {
+        let tbody = document.getElementById(tbodyId);
+        for (let i = 0; i < data.length; ++i) {
+            let row = this.createRow(data[i]);
+            tbody.appendChild(row);
+        }
 
     }
 

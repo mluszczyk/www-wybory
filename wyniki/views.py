@@ -11,6 +11,35 @@ from wyniki import forms, models
 from wyniki.election_statistics import ElectionStatistics
 
 
+def format_percent(a, b):
+    percent = "{0:.2f}".format(100 * a / b)
+    return percent
+
+
+def prepare_table(raw_rows, category):
+    ready_rows = []
+    for numer, raw_row in enumerate(raw_rows, start=1):
+        liczba_a = raw_row['liczba_glosow_kandydat_a']
+        liczba_b = raw_row['liczba_glosow_kandydat_b']
+        vote_sum = liczba_a + liczba_b
+
+        ready_row = {
+            'numer': numer,
+            'nazwa': raw_row['nazwa'],
+            'liczba_a': liczba_a,
+            'liczba_b': liczba_b,
+            'liczba_waznych_glosow': vote_sum,
+            'kod': raw_row['kod'],
+            'kategoria': category,
+            'procent_a_tekst': format_percent(liczba_a, vote_sum) if vote_sum else "-",
+            'procent_b_tekst': format_percent(liczba_b, vote_sum) if vote_sum else "-"
+        }
+        ready_rows.append(ready_row)
+
+    return ready_rows
+
+
+
 class ResultsView(TemplateView):
     template_name = "wyniki/results.html"
 
@@ -23,7 +52,10 @@ class ResultsView(TemplateView):
         data['commune_size_statistics'] = statistics.get_statistics("commune_size")
         data['javascript_data'] = json.dumps({
             'general': statistics.get_general_statistics(),
-            'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates]
+            'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates],
+            'tables': {
+                'voivodeship_statistics_table': prepare_table(statistics.get_statistics("voivodeship"), 'voivodeship')
+            }
         })
 
         return data
