@@ -136,7 +136,7 @@ class ResultEditPopup extends Popup {
         Wyniki.jsonPromise("POST", url, data).then(function(data) {
             if (data.status === "OK") {
                 console.log("Success!");
-                location.reload();
+                wyniki.refreshPage();
             } else if (data.status == "formError") {
                 console.log(data['formErrors']);
             } else if (data.status == "outdatedModification") {
@@ -173,10 +173,12 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         this.username = username;
         this.loginBar = document.querySelector(".login-container");
         this.setLoginBar();
+        this.refreshPage();
+    }
 
+    refreshPage() {
         let wyniki = this;
-        Wyniki.retrieveStatistics().then(function(statistics) {
-            console.log(statistics);
+        Wyniki.retrieveStatistics().then(function (statistics) {
             wyniki.fillInPage(statistics);
         });
     }
@@ -191,6 +193,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
 
         fillInStatistics(document, statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
         fillInStatistics(document, statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
+
         for (var key in statistics.tables) {
             if (!statistics.tables.hasOwnProperty(key)) {
                 continue;
@@ -222,6 +225,9 @@ class Wyniki {   // should this be wrapped in an anonymous function?
     fillInTable(data, category) {
         let selector = `[data-table='${category}']`;
         let tbody = document.querySelector(selector);
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
         for (let i = 0; i < data.length; ++i) {
             let row = this.createRow(data[i]);
             tbody.appendChild(row);
