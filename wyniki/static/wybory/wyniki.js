@@ -179,7 +179,12 @@ class Wyniki {   // should this be wrapped in an anonymous function?
 
         fillInStatistics(document, statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
         fillInStatistics(document, statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
-        this.fillInTable(statistics.tables['voivodeship_statistics_table'], 'voivodeship-statistics-table');
+        for (var key in statistics.tables) {
+            if (!statistics.tables.hasOwnProperty(key)) {
+                continue;
+            }
+            this.fillInTable(statistics.tables[key], key);
+        }
 
     }
 
@@ -193,8 +198,8 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         link.onclick = function() {
             wyniki.openCommuneListPopup(rowData['kategoria'], rowData['kod'])
         };
-        if (rowData['liczba_waznych_glosow'] !== null) {
-            let meterContainer = row.querySelector("[data-meter");
+        if (rowData['liczba_waznych_glosow'] > 0) {
+            let meterContainer = row.querySelector("[data-meter]");
             meterContainer.innerHTML = `<div class="meter primary-secondary">
                 <span style="width: ${rowData["procent_a_tekst"]}%"></span>
             </div>`;
@@ -203,8 +208,9 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         return row;
     }
 
-    fillInTable(data, tbodyId) {
-        let tbody = document.getElementById(tbodyId);
+    fillInTable(data, category) {
+        let selector = `[data-table='${category}']`;
+        let tbody = document.querySelector(selector);
         for (let i = 0; i < data.length; ++i) {
             let row = this.createRow(data[i]);
             tbody.appendChild(row);

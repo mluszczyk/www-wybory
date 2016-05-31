@@ -34,7 +34,7 @@ class SeleniumTest(StaticLiveServerTestCase):
     def test_commune_list_unavailable_not_logged(self):
         self.browser.get(self.live_server_url)
 
-        xpath = "//span[@data-code='miasto']"
+        xpath = "(//tbody[@data-table='commune_type']//span[@data-row-link])[1]"
         element = self.browser.find_element_by_xpath(xpath)
         element.click()
 
@@ -53,7 +53,7 @@ class SeleniumTest(StaticLiveServerTestCase):
 
         self.assertIn("Dzień dobry", self.browser.find_element_by_tag_name("body").text)
 
-        xpath = "//span[@data-code='miasto']"
+        xpath = "(//tbody[@data-table='commune_type']//span[@data-row-link])[1]"
         element = self.browser.find_element_by_xpath(xpath)
         element.click()
 

@@ -39,7 +39,6 @@ def prepare_table(raw_rows, category):
     return ready_rows
 
 
-
 class ResultsView(TemplateView):
     template_name = "wyniki/results.html"
 
@@ -47,14 +46,13 @@ class ResultsView(TemplateView):
         candidates = list(models.Kandydat.objects.all())
         statistics = ElectionStatistics(candidates)
         data = statistics.get_general_statistics()
-        data['voivodeship_statistics'] = statistics.get_statistics("voivodeship")
-        data['commune_type_statistics'] = statistics.get_statistics("commune_type")
-        data['commune_size_statistics'] = statistics.get_statistics("commune_size")
         data['javascript_data'] = json.dumps({
             'general': statistics.get_general_statistics(),
             'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates],
             'tables': {
-                'voivodeship_statistics_table': prepare_table(statistics.get_statistics("voivodeship"), 'voivodeship')
+                'voivodeship': prepare_table(statistics.get_statistics("voivodeship"), 'voivodeship'),
+                'commune_type': prepare_table(statistics.get_statistics("commune_type"), 'commune_type'),
+                'commune_size': prepare_table(statistics.get_statistics("commune_size"), 'commune_size')
             }
         })
 

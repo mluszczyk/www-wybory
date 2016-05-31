@@ -163,7 +163,7 @@
             <td>liczba</td>
         </tr>
         </thead>
-        <tbody id="voivodeship-statistics-table"></tbody>
+        <tbody data-table="voivodeship"></tbody>
         <tbody>
         {% row "Σ" None None "Polska" liczba_glosow_kandydat_a liczba_glosow_kandydat_b cls="summary" %}
         </tbody>
@@ -199,17 +199,13 @@
         </tr>
         </thead>
 
-        {% for item in commune_type_statistics %}
-            {% row forloop.counter 'commune_type' item.kod item.nazwa|title item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
-        {% endfor %}
+        <tbody data-table="commune_type"></tbody>
         <tr>
             <td colspan="14" class="tabhdr_22">Porównanie wyników głosowania na kandydatów w
                 zależności od liczby mieszkańców gminy
             </td>
         </tr>
-        {% for item in commune_size_statistics %}
-            {% row forloop.counter 'commune_size' item.kod item.nazwa item.liczba_glosow_kandydat_a item.liczba_glosow_kandydat_b %}
-        {% endfor %}
+        <tbody data-table="commune_size"></tbody>
     </table>
 </div>
 </div>
