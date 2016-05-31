@@ -168,14 +168,26 @@ class ResultEditPopup extends Popup {
 }
 
 class Wyniki {   // should this be wrapped in an anonymous function?
-    constructor(csrfToken, username, statistics) {
+    constructor(csrfToken, username) {
         this.csrfToken = csrfToken;
         this.username = username;
         this.loginBar = document.querySelector(".login-container");
+        this.setLoginBar();
+
+        let wyniki = this;
+        Wyniki.retrieveStatistics().then(function(statistics) {
+            console.log(statistics);
+            wyniki.fillInPage(statistics);
+        });
+    }
+
+    static retrieveStatistics() {
+        return Wyniki.jsonPromise("GET", "/result-data/");
+    }
+
+    fillInPage(statistics) {
         this.candidateA = statistics.candidates[0];
         this.candidateB = statistics.candidates[1];
-        this.mapLinks();
-        this.setLoginBar();
 
         fillInStatistics(document, statistics.general, "data-statistics", function(item, value) {item.innerHTML = value;});
         fillInStatistics(document, statistics.general, "data-width", function(item, value) {item.style.width = value + "%";});
@@ -185,7 +197,6 @@ class Wyniki {   // should this be wrapped in an anonymous function?
             }
             this.fillInTable(statistics.tables[key], key);
         }
-
     }
 
 

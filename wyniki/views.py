@@ -42,11 +42,13 @@ def prepare_table(raw_rows, category):
 class ResultsView(TemplateView):
     template_name = "wyniki/results.html"
 
-    def get_context_data(self, **kwargs):
-        data = {}
+
+class ResultsDataView(View):
+
+    def get(self, request):
         candidates = list(models.Kandydat.objects.all())
         statistics = ElectionStatistics(candidates)
-        data['javascript_data'] = json.dumps({
+        data = {
             'general': statistics.get_general_statistics(),
             'candidates': [{"pk": candidate.pk, "name": candidate.nazwa} for candidate in candidates],
             'tables': {
@@ -54,9 +56,8 @@ class ResultsView(TemplateView):
                 'commune_type': prepare_table(statistics.get_statistics("commune_type"), 'commune_type'),
                 'commune_size': prepare_table(statistics.get_statistics("commune_size"), 'commune_size')
             }
-        })
-
-        return data
+        }
+        return JsonResponse(data)
 
 
 class CommuneListJsonView(View):
