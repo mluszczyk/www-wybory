@@ -78,6 +78,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         jsonPromise("POST", "/ajax-login/", data).then(function() {
             console.log("Logged in");
             app.username = form.username.value;
+            app.csrfToken = Cookies.get("csrftoken");
             app.setLoginBar();
         }).catch(function(error) {
             console.log(error);
