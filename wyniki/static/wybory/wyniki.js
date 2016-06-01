@@ -4,6 +4,10 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         this.username = username;
         this.loginBar = document.querySelector(".login-container");
         this.setLoginBar();
+        if (localStorage.hasOwnProperty("statistics")) {
+            let statistics = JSON.parse(localStorage.statistics);
+            this.fillInPage(statistics);
+        }
         this.refreshPage();
     }
 
@@ -11,6 +15,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         let wyniki = this;
         document.querySelector("[data-statistics='generation_info']").innerHTML += ' Ładowanie.';
         Wyniki.retrieveStatistics().then(function (statistics) {
+            localStorage.statistics = JSON.stringify(statistics);
             wyniki.fillInPage(statistics);
         });
     }
