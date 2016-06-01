@@ -9,6 +9,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
 
     refreshPage() {
         let wyniki = this;
+        document.querySelector("[data-statistics='generation_info']").innerHTML += ' Ładowanie.';
         Wyniki.retrieveStatistics().then(function (statistics) {
             wyniki.fillInPage(statistics);
         });

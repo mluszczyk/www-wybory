@@ -1,12 +1,12 @@
-import abc
-import enum
 from collections import namedtuple
 
 import itertools
 from typing import Union
 
+import pytz
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.utils import timezone
 
 from wyniki import models
 
@@ -123,6 +123,8 @@ class ElectionStatistics:
         data['kandydat_a_procent'] = data['candidates_summary'][0]['percent']
         data['kandydat_b_nazwa'] = self.candidates[1].nazwa
         data['kandydat_b_procent'] = data['candidates_summary'][1]['percent']
+        now = timezone.now().astimezone(pytz.timezone("Europe/Warsaw"))
+        data['generation_info'] = "Dane wygenerowane {0:%H}:{0:%M}:{0:%S} {0:%Z}.".format(now)
 
         return data
 

@@ -267,3 +267,7 @@ table {
 .error-div {
     font-weight: bold;
 }
+
+.login-container form {
+    display: inline;
+}
