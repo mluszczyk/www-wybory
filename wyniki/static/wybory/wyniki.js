@@ -98,6 +98,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
             app.setLoginBar();
         }).catch(function(error) {
             console.log(error);
+            document.getElementById("login-status").innerHTML = " Logowanie nie powiodło się."
         });
     }
 
@@ -109,6 +110,8 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         let password = createInput("password", "password", "");
         let loginForm = document.createElement("form");
         let submit = createInput("submit", "button", "Zaloguj");
+        let loginStatus = document.createElement("span");
+        loginStatus.id = "login-status";
         let wyniki = this;
         submit.onclick = function() {
             let form = this.form;
@@ -123,6 +126,7 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         loginForm.appendChild(document.createTextNode(" "));
         loginForm.appendChild(password);
         loginForm.appendChild(submit);
+        loginForm.appendChild(loginStatus);
         return loginForm;
     }
 
