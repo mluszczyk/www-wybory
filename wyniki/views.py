@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView, View
 
 from wyniki import forms, models
@@ -58,6 +59,10 @@ class ResultsDataView(View):
         }
         return JsonResponse(data)
 
+    @method_decorator(ensure_csrf_cookie)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ResultsDataView, self).dispatch(request, *args, *kwargs)
+
 
 class CommuneListJsonView(View):
 
@@ -104,3 +109,13 @@ class AjaxLogin(View):
         else:
             login(request, user)
             return JsonResponse({"status": "OK"})
+
+
+class Username(View):
+
+    def get(self, request):
+        data = {
+            'is_authenticated': request.user.is_authenticated(),
+            'username': request.user.username,
+        }
+        return JsonResponse(data)

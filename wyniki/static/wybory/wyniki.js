@@ -1,14 +1,30 @@
 class Wyniki {   // should this be wrapped in an anonymous function?
-    constructor(csrfToken, username) {
-        this.csrfToken = csrfToken;
-        this.username = username;
+    constructor() {
+        this.csrfToken = "";
+        this.username = "";
         this.loginBar = document.querySelector(".login-container");
-        this.setLoginBar();
         if (localStorage.hasOwnProperty("statistics")) {
             let statistics = JSON.parse(localStorage.statistics);
             this.fillInPage(statistics);
         }
         this.refreshPage();
+        this.fetchUsername();
+    }
+
+    fetchUsername() {
+        let app = this;
+        jsonPromise("GET", "/username/", {}).then(function(data) {
+            app.csrfToken = Cookies.get("csrftoken");
+            console.log(app.csrfToken);
+            if (data['is_authenticated']) {
+                app.username = data['username'];
+            } else {
+                app.username = '';
+            }
+            app.setLoginBar();
+        }).catch(function() {
+            app.loginBar.innerHTML = "Błąd w logowaniu.";
+        });
     }
 
     refreshPage() {

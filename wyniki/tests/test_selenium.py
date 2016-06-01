@@ -27,12 +27,16 @@ class SeleniumTest(StaticLiveServerTestCase):
     def test_get(self):
         self.browser.get(self.live_server_url)
 
+        time.sleep(0.1)
+
         xpath = "/html/body/div[5]/div/div[2]/table/tbody/tr[2]/td[3]"
         element = self.browser.find_element_by_xpath(xpath)
         self.assertEquals(element.text, "1000")
 
     def test_commune_list_unavailable_not_logged(self):
         self.browser.get(self.live_server_url)
+
+        time.sleep(0.1)
 
         xpath = "(//tbody[@data-table='commune_type']//span[@data-row-link])[1]"
         element = self.browser.find_element_by_xpath(xpath)
@@ -45,6 +49,9 @@ class SeleniumTest(StaticLiveServerTestCase):
         User.objects.create_user("blah", None, "blah")
 
         self.browser.get(self.live_server_url)
+
+        time.sleep(0.1)
+
         self.browser.find_element_by_xpath("//input[@name='username']").send_keys("blah")
         self.browser.find_element_by_xpath("//input[@name='password']").send_keys("blah")
         self.browser.find_element_by_xpath("//input[@name='submit']").click()

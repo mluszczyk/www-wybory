@@ -29,6 +29,9 @@ function jsonPromise(method, url, data) {
                 reject("Status code " + request.status)
             }
         });
+        request.addEventListener("error", function () {
+            reject("Failed to load.");
+        });
         if (!!data) {
             request.send(data);
         } else {
