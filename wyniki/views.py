@@ -44,8 +44,10 @@ class ResultsView(TemplateView):
 
 
 class ResultsDataView(View):
-
     def get(self, request):
+        import time
+        time.sleep(5)
+
         candidates = list(models.Kandydat.objects.all())
         statistics = ElectionStatistics(candidates)
         data = {
