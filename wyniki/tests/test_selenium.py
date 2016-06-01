@@ -11,9 +11,8 @@ from wyniki import models
 from wyniki.tests import factories
 
 
-class SeleniumTest(StaticLiveServerTestCase):
-    def setUp(self):
-        self.browser = webdriver.Chrome()
+class FixtureMixin:
+    def set_up_database(self):
         self.candidates = [
             factories.KandydatFactory(nazwa="Kandydat A"),
             factories.KandydatFactory(nazwa="Kandydat B")
@@ -23,6 +22,12 @@ class SeleniumTest(StaticLiveServerTestCase):
             models.Wynik.objects.create(gmina=self.commune, kandydat=self.candidates[0], liczba=1000),
             models.Wynik.objects.create(gmina=self.commune, kandydat=self.candidates[1], liczba=2000)
         ]
+
+
+class SeleniumTest(FixtureMixin, StaticLiveServerTestCase):
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+        self.set_up_database()
 
     def test_get(self):
         self.browser.get(self.live_server_url)
@@ -67,3 +72,26 @@ class SeleniumTest(StaticLiveServerTestCase):
         time.sleep(0.1)
 
         self.browser.find_element_by_xpath("//span[@class='edit-results']")
+
+
+class SeleniumBrokenConnectionTest(FixtureMixin, StaticLiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+        self.set_up_database()
+
+    def test_broken_connection(self):
+        self.browser.get(self.live_server_url)
+
+        time.sleep(0.1)
+
+        self.server_thread.terminate()
+        self.server_thread.join()
+
+        time.sleep(0.1)
+
+        xpath = "(//tbody[@data-table='commune_type']//span[@data-row-link])[1]"
+        element = self.browser.find_element_by_xpath(xpath)
+        element.click()
+
+        self.assertIn("połączenia", self.browser.find_element_by_tag_name("body").text)

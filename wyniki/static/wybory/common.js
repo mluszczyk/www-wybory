@@ -83,3 +83,11 @@ function createInput(name, type, value) {
     communeInput.required = true;
     return communeInput;
 }
+
+class ConnectionBrokenPopup extends Popup {
+    constructor() {
+        let content = document.createTextNode(
+            "Nie udało się nawiązać połączenia. Czy mają Państwo dostęp do Internetu?");
+        super(content);
+    }
+}

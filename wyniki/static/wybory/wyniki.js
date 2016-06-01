@@ -167,6 +167,9 @@ class Wyniki {   // should this be wrapped in an anonymous function?
                 });
             popup.show();
         }).catch(function(message) {
+            let popup = new ConnectionBrokenPopup();
+            popup.show();
+
             console.log(message);
         });
     }
