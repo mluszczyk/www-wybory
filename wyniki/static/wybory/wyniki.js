@@ -141,7 +141,9 @@ class Wyniki {   // should this be wrapped in an anonymous function?
         let app = this;
         dataPromise.then(function(data) {
             let popup = new CommuneListPopup(app.csrfToken, app.username.length > 0,
-                app.candidateA, app.candidateB, data['communeList']);
+                app.candidateA, app.candidateB, data['communeList'], function() {
+                    app.refreshPage();
+                });
             popup.show();
         }).catch(function(message) {
             console.log(message);

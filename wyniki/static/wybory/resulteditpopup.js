@@ -10,7 +10,7 @@ class ResultEditPopup extends Popup {
         return div;
     }
 
-    static getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification) {
+    static getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification, updateCallback) {
         let header = createElementWithContent("h2", "Modyfikacja wyników");
         let form = document.createElement("form");
 
@@ -24,7 +24,7 @@ class ResultEditPopup extends Popup {
         form.appendChild(createInput("modification", "hidden", modification));
         form.appendChild(ResultEditPopup.createInputRow("result_a", "number", resultCandidateA, `Wynik kandydata ${candidateA.name}`));
         form.appendChild(ResultEditPopup.createInputRow("result_b", "number", resultCandidateB, `Wynik kandydata ${candidateB.name}`));
-        form.appendChild(ResultEditPopup.saveButton());
+        form.appendChild(ResultEditPopup.saveButton(updateCallback));
 
         let div = document.createElement("div");
         div.appendChild(header);
@@ -32,7 +32,7 @@ class ResultEditPopup extends Popup {
         return div;
     }
 
-    static submit(form) {
+    static submit(form, updateCallback) {
         let url = "/change-results/";
         let data = new FormData(form);
         let errorDiv = form.querySelector(".error-div");
@@ -45,7 +45,7 @@ class ResultEditPopup extends Popup {
         jsonPromise("POST", url, data).then(function(data) {
             if (data.status === "OK") {
                 console.log("Success!");
-                wyniki.refreshPage();
+                updateCallback();
             } else if (data.status == "formError") {
                 console.log(data['formErrors']);
             } else if (data.status == "outdatedModification") {
@@ -63,15 +63,21 @@ class ResultEditPopup extends Popup {
         });
     }
 
-    static saveButton() {
+    static saveButton(updateCallback) {
         var save = createInput("button", "button", "✓ Zapisz");
         save.onclick = function () {
-            ResultEditPopup.submit(save.form);
+            ResultEditPopup.submit(save.form, updateCallback);
         };
         return save;
     }
 
-    constructor(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification) {
-        super(ResultEditPopup.getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification));
+    constructor(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification, updateCallback) {
+        super(null);
+        let popup = this;
+        let closeUpdateCallback = function() {
+            popup.close();
+            updateCallback();
+        };
+        this.content = ResultEditPopup.getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification, closeUpdateCallback);
     }
 }

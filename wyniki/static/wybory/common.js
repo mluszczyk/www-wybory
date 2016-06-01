@@ -44,12 +44,14 @@ class Popup {
 
     show() {
         let outerDiv = document.createElement("div");
+        this.outerDiv = outerDiv;
         let exit = createElementWithContent("p", "Proszę kliknąć na zewnątrz okienka, aby wyjść");
         exit.classList.add("modal-popup-exit");
         outerDiv.appendChild(exit);
         outerDiv.classList.add("modal-popup-container");
+        let popup = this;
         outerDiv.onclick = function() {
-            document.body.removeChild(outerDiv);
+            popup.close();
         };
         let div = document.createElement("div");
         outerDiv.appendChild(div);
@@ -60,6 +62,14 @@ class Popup {
         div.appendChild(this.content);
         document.body.appendChild(outerDiv);
     }
+
+    close() {
+        if (this.hasOwnProperty("outerDiv")) {
+            document.body.removeChild(this.outerDiv);
+            delete this.outerDiv;
+        }
+    }
+
 }
 
 function createInput(name, type, value) {
