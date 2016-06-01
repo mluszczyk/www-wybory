@@ -1,13 +1,4 @@
 class ResultEditPopup extends Popup {
-    static createInput(name, type, value) {
-        let communeInput = document.createElement("input");
-        communeInput.type = type;
-        communeInput.name = name;
-        communeInput.value = value;
-        communeInput.required = true;
-        return communeInput;
-    }
-
     static createInputRow(name, type, value, label) {
         let labelElement = document.createElement("label");
         labelElement.innerHTML = label;
@@ -15,22 +6,22 @@ class ResultEditPopup extends Popup {
         let div = document.createElement("p");
         div.appendChild(labelElement);
         div.appendChild(document.createTextNode(" "));
-        div.appendChild(ResultEditPopup.createInput(name, type, value));
+        div.appendChild(createInput(name, type, value));
         return div;
     }
 
     static getContent(csrfToken, communePk, candidateA, candidateB, resultCandidateA, resultCandidateB, modification) {
-        let header = createElement("h2", "Modyfikacja wyników");
+        let header = createElementWithContent("h2", "Modyfikacja wyników");
         let form = document.createElement("form");
 
         var errorDiv = document.createElement("div");
         errorDiv.classList.add("error-div");
         form.appendChild(errorDiv);
-        form.appendChild(ResultEditPopup.createInput("commune", "hidden", communePk));
-        form.appendChild(ResultEditPopup.createInput("candidate_a", "hidden", candidateA.pk));
-        form.appendChild(ResultEditPopup.createInput("candidate_b", "hidden", candidateB.pk));
-        form.appendChild(ResultEditPopup.createInput("csrfmiddlewaretoken", "hidden", csrfToken));
-        form.appendChild(ResultEditPopup.createInput("modification", "hidden", modification));
+        form.appendChild(createInput("commune", "hidden", communePk));
+        form.appendChild(createInput("candidate_a", "hidden", candidateA.pk));
+        form.appendChild(createInput("candidate_b", "hidden", candidateB.pk));
+        form.appendChild(createInput("csrfmiddlewaretoken", "hidden", csrfToken));
+        form.appendChild(createInput("modification", "hidden", modification));
         form.appendChild(ResultEditPopup.createInputRow("result_a", "number", resultCandidateA, `Wynik kandydata ${candidateA.name}`));
         form.appendChild(ResultEditPopup.createInputRow("result_b", "number", resultCandidateB, `Wynik kandydata ${candidateB.name}`));
         form.appendChild(ResultEditPopup.saveButton());
@@ -73,7 +64,7 @@ class ResultEditPopup extends Popup {
     }
 
     static saveButton() {
-        var save = ResultEditPopup.createInput("button", "button", "✓ Zapisz");
+        var save = createInput("button", "button", "✓ Zapisz");
         save.onclick = function () {
             ResultEditPopup.submit(save.form);
         };

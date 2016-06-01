@@ -12,7 +12,7 @@ function fillInStatistics(context, data, attribute, func) {
     }
 }
 
-function createElement(name, content) {
+function createElementWithContent(name, content) {
     let elem = document.createElement(name);
     elem.innerHTML = content;
     return elem;
@@ -44,7 +44,7 @@ class Popup {
 
     show() {
         let outerDiv = document.createElement("div");
-        let exit = createElement("p", "Proszę kliknąć na zewnątrz okienka, aby wyjść");
+        let exit = createElementWithContent("p", "Proszę kliknąć na zewnątrz okienka, aby wyjść");
         exit.classList.add("modal-popup-exit");
         outerDiv.appendChild(exit);
         outerDiv.classList.add("modal-popup-container");
@@ -60,4 +60,13 @@ class Popup {
         div.appendChild(this.content);
         document.body.appendChild(outerDiv);
     }
+}
+
+function createInput(name, type, value) {
+    let communeInput = document.createElement("input");
+    communeInput.type = type;
+    communeInput.name = name;
+    communeInput.value = value;
+    communeInput.required = true;
+    return communeInput;
 }

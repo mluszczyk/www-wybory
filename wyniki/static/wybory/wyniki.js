@@ -79,13 +79,13 @@ class Wyniki {   // should this be wrapped in an anonymous function?
     }
 
     createLoginForm() {
-        let csrf = ResultEditPopup.createInput("csrfmiddlewaretoken", "hidden", this.csrfToken);
-        let usernameLabel = createElement("label", "Nazwa użytkownika");
-        let username = ResultEditPopup.createInput("username", "username", "");
-        let passwordLabel = createElement("label", "Hasło");
-        let password = ResultEditPopup.createInput("password", "password", "");
-        let loginForm = createElement("form");
-        let submit = ResultEditPopup.createInput("submit", "button", "Zaloguj");
+        let csrf = createInput("csrfmiddlewaretoken", "hidden", this.csrfToken);
+        let usernameLabel = createElementWithContent("label", "Nazwa użytkownika");
+        let username = createInput("username", "username", "");
+        let passwordLabel = createElementWithContent("label", "Hasło");
+        let password = createInput("password", "password", "");
+        let loginForm = document.createElement("form");
+        let submit = createInput("submit", "button", "Zaloguj");
         let wyniki = this;
         submit.onclick = function() {
             let form = this.form;

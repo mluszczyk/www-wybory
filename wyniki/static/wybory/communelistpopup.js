@@ -4,7 +4,7 @@ class CommuneListPopup extends Popup {
     }
 
     static getEditButton(csrfToken, candidateA, candidateB, record) {
-        let edit = createElement("span", "✎ Edycja");
+        let edit = createElementWithContent("span", "✎ Edycja");
         edit.classList.add("edit-results");
         edit.onclick = function() {
             let popup = new ResultEditPopup(csrfToken, record['communePk'], candidateA, candidateB, record['resultCandidateA'],
@@ -21,20 +21,20 @@ class CommuneListPopup extends Popup {
         div.appendChild(header);
         let table = document.createElement("table");
         if (communeList.length === 0) {
-            div.appendChild(createElement("p", "Lista pusta"));
+            div.appendChild(createElementWithContent("p", "Lista pusta"));
         }
         for (let record of communeList) {
             let row = document.createElement("tr");
             table.appendChild(row);
-            var communeName = createElement("td", record['communeName']);
+            var communeName = createElementWithContent("td", record['communeName']);
             if (isLoggedIn) {
                 let edit = CommuneListPopup.getEditButton(csrfToken, candidateA, candidateB, record);
                 communeName.appendChild(document.createTextNode(" "));
                 communeName.appendChild(edit);
             }
             row.appendChild(communeName);
-            row.appendChild(createElement("td", record['resultCandidateA']));
-            row.appendChild(createElement("td", record['resultCandidateB']));
+            row.appendChild(createElementWithContent("td", record['resultCandidateA']));
+            row.appendChild(createElementWithContent("td", record['resultCandidateB']));
         }
         div.appendChild(table);
         return div;
